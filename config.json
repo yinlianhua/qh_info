@@ -1,0 +1,28 @@
+{
+    "url"    : "https://hq.sinajs.cn/?list=nf_",
+    "header" : {
+        "referer" : "https://finance.sina.com.cn"
+    },
+    "monit_map" : {
+        "白银" : "AG0",
+        "螺纹" : "RB0",
+        "玻璃" : "FG0",
+        "甲酸" : "TA0"
+    },
+    "price_info" : {
+        "玻璃" : 20,
+        "螺纹" : 10
+    },
+    "price_pos" : {
+        "玻璃" : {
+            "type"  : "空",
+            "count" : 1,
+            "cost"  : 1314
+        },
+        "螺纹" : {
+            "type"  : "多",
+            "count" : 1,
+            "cost"  : 3486
+        }
+    }
+}
