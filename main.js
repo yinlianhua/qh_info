@@ -14,6 +14,8 @@ global.logger = new Logger();
 
 (async function() {
     do {
-        await price(config);
-    } while(await check());
+        if (await check()) {
+            await price(config);
+        }
+    } while(true);
 })()

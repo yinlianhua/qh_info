@@ -23,22 +23,30 @@ async function trading_hours() {
     //         21:00 - 02:30 黄金、白银、原油
     //         21:00 - 23:00 其他
 
-    await sleep(5000);
-
-    let day = moment().day();
-    let now = moment().unix();
-    let st  = moment().startOf("day").add(9,  "hours").unix();
-    let et  = moment().startOf("day").add(15, "hours").unix();
+    let res  = true;
+    let time = 5000;
+    let day  = moment().day();
+    let now  = moment().unix();
+    let st   = moment().startOf("day").add(9,  "hours").unix();
+    let et   = moment().startOf("day").add(15, "hours").unix();
 
     if (day < 1 || day > 5) {
-        return false;
+        res  = false;
+        time = 60000;
     }
 
     if (now < st || now > et) {
-        return false;
+        res  = false;
+        time = 60000;
     }
 
-    return true;
+    if (res == false) {
+        logger.info(`不在交易时间内`);
+    }
+
+    await sleep(time);
+
+    return res;
 };
 
 module.exports = trading_hours;
