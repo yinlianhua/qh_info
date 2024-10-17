@@ -5,17 +5,20 @@
 
 'use strict';
 
+const moment = require("moment");
 const Logger = require("./libs/logger");
 const price  = require("./libs/price");
-const check  = require("./libs/trading_hours");
+const check  = require("./libs/check");
 const config = require("./config.json");
 
-global.logger = new Logger();
+global.logger  = new Logger();
+global.data_ts = {};
 
 (async function() {
     do {
-        if (await check()) {
-            await price(config);
+        let std_time = moment().startOf("minute").unix();
+        if (await check(std_time)) {
+            await price(config, std_time);
         }
     } while(true);
 })()

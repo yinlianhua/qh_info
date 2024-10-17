@@ -8,7 +8,7 @@
 const moment = require("moment");
 const sleep = require("./sleep");
 
-async function trading_hours() {
+async function check_time(std_time) {
     // 国内期货交易时间
     // 周一至周五，分为日盘和夜盘，具体交易时间如下：
     //     股指期货 09:30-11:30, 13:00-15:00
@@ -23,30 +23,38 @@ async function trading_hours() {
     //         21:00 - 02:30 黄金、白银、原油
     //         21:00 - 23:00 其他
 
-    let res  = true;
-    let time = 5000;
+    let res  = false;
+    let wait = 60000;
     let day  = moment().day();
-    let now  = moment().unix();
-    let st   = moment().startOf("day").add(9,  "hours").unix();
-    let et   = moment().startOf("day").add(15, "hours").unix();
+    let now  = std_time;
+    let st1  = moment().startOf("day").add(9, "hours").unix();
+    let et1  = st1 +  75 * 60;
+    let st2  = et1 +  15 * 60;
+    let et2  = st2 +  60 * 60;
+    let st3  = et2 + 120 * 60;
+    // let et3  = st3 +  90 * 60;
+    let et3  = st3 + 390 * 60;
+    let st4  = et3 + 360 * 60;
+    let et4  = st4 + 120 * 60;
 
-    if (day < 1 || day > 5) {
-        res  = false;
-        time = 60000;
-    }
-
-    if (now < st || now > et) {
-        res  = false;
-        time = 60000;
+    if (day >= 1 && day <= 5) {
+        // 时间段1
+        if (now >= st1 && now <= et1) { res = true; wait = 5000; }
+        // 时间段2
+        if (now >= st2 && now <= et2) { res = true; wait = 5000; }
+        // 时间段3
+        if (now >= st3 && now <= et3) { res = true; wait = 5000; }
+        // 时间段4
+        if (now >= st4 && now <= et4) { res = true; wait = 5000; }
     }
 
     if (res == false) {
         logger.info(`不在交易时间内`);
     }
 
-    await sleep(time);
+    await sleep(wait);
 
     return res;
 };
 
-module.exports = trading_hours;
+module.exports = check_time;
