@@ -13,9 +13,6 @@ const t      = require("./types");
 // 日志对象
 class Logger {
     constructor() {
-        this.__pad_type = 6;
-        this.__pad_role = 8;
-
         // 颜色配置
         this.__color  = {
             "magenta" : 1,
@@ -41,7 +38,7 @@ class Logger {
 
         let dye = chalk[color];
 
-        console.log(dye(`[${time}] ${role.padStart(this.__pad_role)} ${type.padStart(this.__pad_type)}: ${info}`));
+        console.log(dye(`[${role} ${type}]: ${info}`));
     }
 
     warn(info="", role="system") {

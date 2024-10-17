@@ -30,14 +30,14 @@ async function data_parser(str="") {
 
     return {
         "子编号" : str[1],
-        "开盘价" : str[2],
-        "最高价" : str[3],
-        "最低价" : str[4],
+        "开盘价" : String(str[2]).padStart(10),
+        "最高价" : String(str[3]).padStart(10),
+        "最低价" : String(str[4]).padStart(10),
         "买入价" : str[6],
         "卖出价" : str[7],
-        "最新价" : str[8],
-        "结算价" : str[9],
-        "昨结算" : str[10],
+        "最新价" : String(str[8]).padStart(10),
+        "结算价" : String(str[9]).padStart(10),
+        "昨结算" : String(str[10]).padStart(10),
         "买入量" : str[11],
         "卖出量" : str[12],
         "持仓量" : str[13],
@@ -62,11 +62,11 @@ async function data_position(info, price, position) {
     res["持仓点位"] = position.cost;
 
     if (position.type == "多") {
-        res["持仓盈亏"] = (info["卖出价"] - position.cost) * position.count * price;
+        res["持仓盈亏"] = (info["买入价"] - position.cost) * position.count * price;
     }
 
     if (position.type == "空") {
-        res["持仓盈亏"] = (position.cost - info["买入价"]) * position.count * price;
+        res["持仓盈亏"] = (position.cost - info["卖出价"]) * position.count * price;
     }
 
     if (res["持仓盈亏"] > 0) {
@@ -77,13 +77,14 @@ async function data_position(info, price, position) {
 }
 
 async function price(config) {
+    logger.info("");
     logger.info(`最新价格 ${moment().format("YYYY-MM-DD HH:mm:ss")}`);
 
     for (let [name, code] of Object.entries(config.monit_map)) {
         let data_api = await http.get(`${config.url}${code}`, {}, false, config.header);
         let data_qh  = await data_parser(data_api.res);
         let data_pos = await data_position(data_qh, config.price_info[name], config.price_pos[name]);
-        let data_log = `${name} - 开盘价:${data_qh["开盘价"]} 范围价:[${data_qh["最低价"]} - ${data_qh["最高价"]}] 最新价:${data_qh["最新价"]}`;
+        let data_log = `${name} - 开盘价:${data_qh["开盘价"]} 范围价:[${data_qh["最低价"]} -${data_qh["最高价"]} ] 最新价:${data_qh["最新价"]}`;
         if (data_pos["持仓盈亏"] != "-") {
             data_log += ` ${data_pos["持仓类型"]},${data_pos["持仓数量"]}手,${data_pos["持仓点位"]},${data_pos["持仓盈亏"]}`;
         }
