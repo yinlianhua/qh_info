@@ -36,23 +36,23 @@ async function price(config, std_time) {
     let [
         qh_pos,
         qh_change,
-        qh_between,
+        // qh_between,
     ] = await Promise.all([
         // 计算盈亏
         policy_posit(config.price_info, config.price_pos, qh_data),
         // 计算异动
         policy_change(std_time),
         // 计算突破
-        policy_between(qh_data),
+        // policy_between(qh_data),
     ]);
 
     await Promise.all([
         // 发送盈亏告警
-        alarm_posit(config.push_deer, qh_pos),
+        // alarm_posit(config.push_deer, qh_pos),
         // 发送异动告警
-        alarm_change(config.push_deer, qh_change),
+        // alarm_change(config.push_deer, qh_change),
         // 发送突破告警
-        alarm_between(config.push_deer, qh_between),
+        alarm_between(config.push_deer, qh_data),
     ]);
 
     // 打印日志
