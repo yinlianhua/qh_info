@@ -3,6 +3,7 @@
 /.idea
 __*
 package-lock.json
+secret.json
 *.swp
 *.bak
 *.tgz

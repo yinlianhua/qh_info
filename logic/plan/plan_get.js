@@ -7,26 +7,29 @@
 
 const _      = require("underscore");
 const moment = require("moment");
-const http   = require("../../libs/http");
+const mysql  = require("../../libs/mysql_conn");
 
-// 每天10:15分获取计划数据
+// 每天10:20分获取计划数据
 const plan_get = async function(std_time) {
-    let key = config.key;
-    let url = config.url.replace("real_key", key);
+    let date = moment.unix(std_time).format("YYYY-MM-DD");
+    let time = moment.unix(std_time).format("HH:mm");
 
-    for (let info of qh_pos) {
-        let msg = "";
+    if (time != "10:20") {
+        return;
+    }
 
-        if (info["盈亏金额"] > 100) {
-            msg = `☆ ${info["持仓名称"]} 盈利: ${info["持仓盈亏"]}`;
-        }
+    let plan = await mysql.connect("plan").query(`SELECT * FROM t_price_plan WHERE date = "${date}"`);
 
-        if (info["盈亏金额"] < -100) {
-            msg = `☆ ${info["持仓名称"]} 亏损: ${info["持仓盈亏"]}`;
-        }
+    if (!plan.err) {
+        for (let elem of plan.res.retObject.results) {
+            if (global.data_plan[elem.name] == undefined) {
+                global.data_plan[elem.name] = {};
+            }
 
-        if (msg != "") {
-            await http.get(encodeURI(`${url}${msg}`), {}, false);
+            global.data_plan[elem.name][elem.id] = {
+                "下限" : elem.down_value,
+                "上限" : elem.upper_value,
+            };
         }
     }
 }
