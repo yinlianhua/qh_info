@@ -8,6 +8,7 @@
 const _              = require("underscore");
 const moment         = require("moment");
 const plan_get       = require("./plan/plan_get");
+const pos_get        = require("./pos/pos_get");
 const log_data       = require("./log/log_data");
 const data_get       = require("./data/data_get");
 const data_parse     = require("./data/data_parse");
@@ -24,6 +25,9 @@ async function price(config, std_time) {
     // 获取计划
     await plan_get(std_time);
 
+    // 获取持仓
+    await pos_get(std_time);
+
     // 获取数据
     let qh_data = await data_get(config.qh_info, config.monit_map);
 
@@ -39,7 +43,7 @@ async function price(config, std_time) {
         // qh_between,
     ] = await Promise.all([
         // 计算盈亏
-        policy_posit(config.price_info, config.price_pos, qh_data),
+        policy_posit(config.price_info, qh_data),
         // 计算异动
         policy_change(std_time),
         // 计算突破

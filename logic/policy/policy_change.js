@@ -45,7 +45,7 @@ const policy_change = async function(std_time) {
         }
     }
 
-    console.log(data_map)
+    // console.log(data_map)
 }
 
 

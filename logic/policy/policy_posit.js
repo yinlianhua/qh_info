@@ -9,12 +9,12 @@ const _      = require("underscore");
 const moment = require("moment");
 
 // 计算持仓盈亏
-const policy_posit = async function (price_info, price_pos, qh_data) {
+const policy_posit = async function (price_info, qh_data) {
     let res = []
 
     for (let info of qh_data) {
         // 无持仓,跳过
-        if (price_pos[info["子名称"]] == undefined || _.isEmpty(price_pos[info["子名称"]])) {
+        if (global.data_pos[info["子名称"]] == undefined || _.isEmpty(global.data_pos[info["子名称"]])) {
             continue;
         }
 
@@ -23,7 +23,7 @@ const policy_posit = async function (price_info, price_pos, qh_data) {
             continue;
         }
 
-        let pos_info   = price_pos[info["子名称"]];
+        let pos_info   = global.data_pos[info["子名称"]];
         let unit_price = price_info[info["子名称"]];
 
         let pos_price = {
