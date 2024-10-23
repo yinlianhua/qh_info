@@ -35,7 +35,7 @@ async function check_time(std_time) {
     let st2  = et1 +  15 * 60;
     let et2  = st2 +  60 * 60;
     let st3  = et2 + 120 * 60;
-    let et3  = st3 + 390 * 60;
+    let et3  = st3 +  90 * 60;
     let st4  = et3 + 360 * 60;
     let et4  = st4 + 120 * 60;
 

@@ -9,7 +9,8 @@
     },
     "price_pos" : {
         "DEMO" : { "type" : "多", "count" :  1, "cost" : 3486 },
-        "玉米" : { "type" : "多", "count" :  1, "cost" : 2200 }
+        "玉米" : { "type" : "多", "count" :  1, "cost" : 2200 },
+        "白银" : { "type" : "空", "count" :  1, "cost" : 8380 }
     },
     "price_plan" : {
         "DEMO" : {
