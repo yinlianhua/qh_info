@@ -8,22 +8,19 @@
         "header" : { "referer" : "https://finance.sina.com.cn" }
     },
     "price_pos" : {
-        "DEMO" : { "type" : "多", "count" : 1, "cost" : 3486 },
-        "螺纹" : { "type" : "多", "count" : 1, "cost" : 3285 },
-        "玻璃" : { "type" : "空", "count" : 1, "cost" : 1170 }
-
+        "DEMO" : { "type" : "多", "count" :  1, "cost" : 3486 },
+        "玉米" : { "type" : "多", "count" :  1, "cost" : 2200 }
     },
     "monit_map" : {
         "白银" : "AG0",
         "螺纹" : "RB0",
+        "热卷" : "HC0",
         "玻璃" : "FG0",
         "纯碱" : "SA0",
         "烧碱" : "SH0",
-        "菜油" : "OI0",
-        "菜粕" : "RM0",
-        "豆油" : "Y0",
-        "豆粕" : "M0",
-        "玉米" : "C0"
+        "乙烯" : "V0",
+        "玉米" : "C0",
+        "甲醇" : "MA0"
     },
     "qh_map" : {
         "白银" : "AG0",

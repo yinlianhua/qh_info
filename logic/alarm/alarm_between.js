@@ -26,7 +26,7 @@ const alarm_between = async function(config={}, qh_pos=[]) {
 
         for (let [type, obj] of Object.entries(plan)) {
             for (let [val, t] of Object.entries(obj)) {
-                console.log(name, type, last, val)
+                // console.log(name, type, last, val)
                 let msg = "";
                 if (type == "上限" && last > val) {
                     msg = `☆ ${name} 最新价 ${last} 高于 ${val}`;

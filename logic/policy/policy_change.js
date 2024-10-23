@@ -10,11 +10,9 @@ const moment = require("moment");
 
 // 计算区间异常变化
 const policy_change = async function(std_time) {
-    let alarm_list = [];
-
     // 计算 1,5,15,30,60 最大值,最小值,波动量
     // let min = [1,5,15,30,60];
-    let data_min = [1];
+    let data_min = [1,5,15];
     let data_map = {}
 
     for (let [name, val_map] of Object.entries(global.data_ts)) {
@@ -45,7 +43,7 @@ const policy_change = async function(std_time) {
         }
     }
 
-    // console.log(data_map)
+    return data_map;
 }
 
 

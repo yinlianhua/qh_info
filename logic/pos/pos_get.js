@@ -9,12 +9,7 @@ const _      = require("underscore");
 const moment = require("moment");
 const mysql  = require("../../libs/mysql_conn");
 
-// 每30分钟重新加载
 const pos_get = async function(std_time) {
-    if (moment.unix(std_time).minute() % 30 != 0) {
-        return;
-    }
-
     global.data_pos = {}
 
     let pos = await mysql.connect("plan").query(`SELECT name, type, count, cost FROM t_price_pos WHERE state = 1;`);
@@ -29,7 +24,7 @@ const pos_get = async function(std_time) {
         }
     }
 
-    console.log(global.data_pos)
+    console.log(global.data_pos);
 }
 
 module.exports = pos_get;
