@@ -67,6 +67,22 @@ const data_parser = async function(std_time, str_list) {
 
         info["强度比"] = String(info["强度比"]).padEnd(5, "☆");
 
+        if (info["强度比"] == "★★★★★" || info["强度比"] == "★★★★☆") {
+            info["多空态"] = "强多";
+        }
+
+        if (info["强度比"] == "☆☆☆☆☆" || info["强度比"] == "★☆☆☆☆") {
+            info["多空态"] = "强空";
+        }
+
+        if (info["强度比"] == "★★★☆☆") {
+            info["多空态"] = "偏多";
+        }
+
+        if (info["强度比"] == "★★☆☆☆") {
+            info["多空态"] = "偏空";
+        }
+
         res.push(info);
     }
 
