@@ -15,7 +15,7 @@ const secret = require("./secret.json");
 global.mysql     = secret;
 global.logger    = new Logger();
 global.data_ts   = {};
-global.data_plan = {};
+global.data_plan = config.price_plan;
 global.data_pos  = config.price_pos;
 
 (async function() {
