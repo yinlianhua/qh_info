@@ -59,13 +59,17 @@ const data_parser = async function(std_time, str_list) {
         info["回撤比"] = info["多空态"] == "多" ? parseInt((str[3]-str[8])/(str[3]-str[4])*100) : parseInt((str[8]-str[4])/(str[3]-str[4])*100);
         info["回撤值"] = info["多空态"] == "多" ? parseInt((str[3]-str[8])) : parseInt((str[8]-str[4]));
 
-        if (info["回撤比"] < 50) { info["强度比"] += "★"; }
-        if (info["回撤比"] < 40) { info["强度比"] += "★"; }
-        if (info["回撤比"] < 30) { info["强度比"] += "★"; }
-        if (info["回撤比"] < 20) { info["强度比"] += "★"; }
-        if (info["回撤比"] < 10) { info["强度比"] += "★"; }
-
-        info["强度比"] = String(info["强度比"]).padEnd(5, "☆");
+        if (info["多空态"] == "多") {
+            if (info["回撤比"] <= 50) { info["强度比"] += "★★★"; }
+            if (info["回撤比"] <= 20) { info["强度比"] += "★";   }
+            if (info["回撤比"] <= 10) { info["强度比"] += "★";   }
+            info["强度比"] = String(info["强度比"]).padEnd(5, "☆");
+        } else {
+            if (info["回撤比"] <= 50) { info["强度比"] += "☆☆☆"; }
+            if (info["回撤比"] <= 20) { info["强度比"] += "☆";   }
+            if (info["回撤比"] <= 10) { info["强度比"] += "☆";   }
+            info["强度比"] = String(info["强度比"]).padStart(5, "★");
+        }
 
         if (info["强度比"] == "★★★★★" || info["强度比"] == "★★★★☆") {
             info["多空态"] = "强多";

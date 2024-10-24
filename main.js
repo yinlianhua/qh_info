@@ -9,8 +9,8 @@ const moment = require("moment");
 const Logger = require("./libs/logger");
 const check  = require("./libs/check");
 const price  = require("./logic/price");
-const config = require("./config.json");
-const secret = require("./secret.json");
+const config = require("./config/qh.json");
+const secret = require("./config/secret.json");
 
 global.mysql     = secret;
 global.logger    = new Logger();

@@ -43,6 +43,23 @@ const policy_posit = async function (price_info, qh_data) {
         res.push(pos_price);
     }
 
+    let total = {
+        "持仓名称" : "合计",
+        "持仓类型" : "-",
+        "持仓数量" : 0,
+        "持仓点位" : 0,
+        "持仓盈亏" : 0,
+        "盈亏金额" : 0
+    }
+
+    for (let elem of res) {
+        total["盈亏金额"] += elem["盈亏金额"];
+    }
+
+    total["持仓盈亏"] = total["盈亏金额"] > 0 ? `+${String(total["盈亏金额"])}` : `${String(total["盈亏金额"])}`;
+
+    res.push(total);
+
     return res;
 }
 
