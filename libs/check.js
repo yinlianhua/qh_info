@@ -9,8 +9,8 @@ const moment = require("moment");
 const sleep = require("./sleep");
 
 async function check_time(std_time, type="qh") {
-    await sleep(1000);
-    return true;
+    // await sleep(1000);
+    // return true;
 
     // 国内期货交易时间
     // 周一至周五，分为日盘和夜盘，具体交易时间如下：

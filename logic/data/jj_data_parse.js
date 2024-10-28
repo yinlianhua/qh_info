@@ -23,6 +23,8 @@ const data_parser = async function(std_time, str_list) {
             "基金码" : elem.code,
             "基金名" : elem.name,
             "最新价" : +str[1],
+            "昨日价" : +str[3],
+            "变化值" : +(str[1]-str[3]),
         }
 
         res.push(info);

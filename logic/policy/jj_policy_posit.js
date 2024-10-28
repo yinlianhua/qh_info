@@ -20,9 +20,11 @@ const policy_posit = async function (pos_info, cost_info, jj_data) {
 
         elem["成本额"] = cost_info[elem["基金码"]];
         elem["持仓额"] = parseFloat((pos_info[elem["基金码"]] * elem["最新价"]).toFixed(2));
-        elem["盈亏额"] = elem["持仓额"] - elem["成本额"];
+        elem["总盈亏"] = elem["持仓额"] - elem["成本额"];
+        elem["日盈亏"] = parseFloat((pos_info[elem["基金码"]] * elem["变化值"]).toFixed(2));
         elem["盈亏值"] = parseFloat((elem["持仓额"] - elem["成本额"]).toFixed(2));
-        elem["盈亏额"] = elem["盈亏额"] > 0 ? `+${String(elem["盈亏额"].toFixed(2))}` : `${String(elem["盈亏额"].toFixed(2))}`;
+        elem["总盈亏"] = elem["总盈亏"] > 0 ? `+${String(elem["总盈亏"].toFixed(2))}` : `${String(elem["总盈亏"].toFixed(2))}`;
+        elem["日盈亏"] = elem["日盈亏"] > 0 ? `+${String(elem["日盈亏"].toFixed(2))}` : `${String(elem["日盈亏"].toFixed(2))}`;
 
         res.push(elem);
     }

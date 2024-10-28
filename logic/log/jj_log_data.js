@@ -16,16 +16,16 @@ const data_log = async function(std_time, jj_pos) {
 
     total = total > 0 ? `+${String(total.toFixed(2))}` : String(total.toFixed(2));
 
-    logs.push("+--------------------------------------------------------------------------------------------------|");
-    logs.push(`|                               ${time} 盈亏(${total.padStart(9)})                                         |`);
-    logs.push("+--------------------------------------------------------------------------------------------------|");
+    logs.push("+----------------------------------------------------------------------------------------------------------------|");
+    logs.push(`|                               ${time} 总盈亏(${total.padStart(9)})                                                     |`);
+    logs.push("+----------------------------------------------------------------------------------------------------------------|");
 
     for (let elem of jj_pos) {
-        let info = `| 最新价: ${String(elem["最新价"].toFixed(4)).padEnd(6)} 成本额: ${String(elem["成本额"].toFixed(2)).padStart(8)} 持仓额: ${String(elem["持仓额"].toFixed(2)).padStart(8)}  盈亏额: ${elem["盈亏额"].padStart(8)} ${elem["基金名"]}`;
+        let info = `| 最新价: ${String(elem["最新价"].toFixed(4)).padEnd(6)} 成本额: ${String(elem["成本额"].toFixed(2)).padStart(8)} 持仓额: ${String(elem["持仓额"].toFixed(2)).padStart(8)} 日盈亏: ${elem["日盈亏"].padStart(7)} 总盈亏: ${elem["总盈亏"].padStart(8)} ${elem["基金名"]}`;
         logs.push(info);
     }
 
-    logs.push("+--------------------------------------------------------------------------------------------------|");
+    logs.push("+----------------------------------------------------------------------------------------------------------------|");
 
     for (let log of logs) {
         global.logger.info(log);
