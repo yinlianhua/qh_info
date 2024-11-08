@@ -9,12 +9,15 @@
         "header" : { "referer" : "https://finance.sina.com.cn" }
     },
     "price_pos" : {
-        "DEMO" : { "type" : "多", "count" :  1, "cost" :  3486 },
-        "f玉米" : { "type" : "多", "count" :  1, "cost" :  2200 },
-        "棉花" : { "type" : "多", "count" :  1, "cost" : 14205 },
-        "f纯碱" : { "type" : "多", "count" :  1, "cost" :  1525 },
+        "DEMO"  : { "type" : "多", "count" :  1, "cost" :  3486 },
+        "玉米"  : { "type" : "多", "count" :  1, "cost" :  2221 },
+        "棉花"  : { "type" : "多", "count" :  1, "cost" : 14205 },
+        "f纯碱" : { "type" : "多", "count" :  1, "cost" :  1540 },
+        "乙烯"  : { "type" : "多", "count" :  1, "cost" :  5450 },
+        "f白糖"  : { "type" : "多", "count" :  1, "cost" :  5820 },
         "f锰硅" : { "type" : "多", "count" :  1, "cost" :  6158 },
-        "F白银" : { "type" : "空", "count" :  1, "cost" :  8130 }
+        "f甲醇" : { "type" : "多", "count" :  1, "cost" :  2449 },
+        "f白银" : { "type" : "空", "count" :  1, "cost" :  8225 }
     },
     "price_plan" : {
         "DEMO"  : { "下限" : {  "1000" : 1 }, "上限" : {  "3000" : 1 } },

@@ -29,7 +29,7 @@ const policy_posit = async function (pos_info, cost_info, jj_data) {
         res.push(elem);
     }
 
-    res = _.sortBy(res, "盈亏值").reverse();
+    res = _.sortBy(res, "持仓额").reverse();
 
     return res;
 }
