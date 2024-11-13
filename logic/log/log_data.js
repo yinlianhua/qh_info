@@ -33,7 +33,7 @@ const data_log = async function(std_time, info_list, qh_pos) {
 
     let time = moment().format("YYYY-MM-DD HH:mm:ss");
     logs.push("+-------------------------------------------------------------------------------------------+---------------------|");
-    logs.push(`|                               ${time}                                         |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(4)})      |`);
+    logs.push(`|                               ${time}                                         |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(5)})     |`);
     logs.push("+-------------------------------------------------------------------------------------------+---------------------|");
 
     for (let info of info_list) {
