@@ -14,35 +14,45 @@ const alarm_between = async function(config={}, qh_pos=[]) {
     let key = config.key;
     let url = config.url.replace("real_key", key);
 
+    let new_date = moment().format("YYYY-MM-DD");
+
     for (let info of qh_pos) {
         let name = info["子名称"];
         let last = info["最新价"];
+        let min  = info["最低价"];
+        let max  = info["最高价"];
 
-        if (global.data_plan[name] == undefined) {
-            continue;
+        if (global.data_plan[name] == undefined || global.data_date != new_date) {
+            global.data_plan[name] = { "下限" : min, "上限" : max };
         }
 
         let plan = global.data_plan[name];
 
-        for (let [type, obj] of Object.entries(plan)) {
-            for (let [val, t] of Object.entries(obj)) {
-                // console.log(name, type, last, val)
-                let msg = "";
-                if (type == "上限" && last > val) {
-                    msg = `☆ ${name} 最新价 ${last} 高于 ${val}`;
-                    delete global.data_plan[name][type][val];
-                }
-                if (type == "下限" && last < val) {
-                    msg = `☆ ${name} 最新价 ${last} 低于 ${val}`;
-                    delete global.data_plan[name][type][val];
-                }
-                if (msg == "") {
-                    continue;
-                }
-                await http.get(encodeURI(`${url}${msg}`), {}, false);
+        for (let [type, val] of Object.entries(plan)) {
+            // console.log(name, type, last, val)
+            let msg = "";
+
+            if (type == "上限" && last > val) {
+                msg = `☆ ${name} 最新价 ${last} 高于 ${val}`;
+                // delete global.data_plan[name][type][val];
+                global.data_plan[name][type] = last;
             }
+
+            if (type == "下限" && last < val) {
+                msg = `☆ ${name} 最新价 ${last} 低于 ${val}`;
+                // delete global.data_plan[name][type][val];
+                global.data_plan[name][type] = last;
+            }
+
+            if (msg == "") {
+                continue;
+            }
+
+            await http.get(encodeURI(`${url}${msg}`), {}, false);
         }
     }
+
+    global.data_date = new_date;
 }
 
 module.exports = alarm_between;

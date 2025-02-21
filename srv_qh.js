@@ -17,6 +17,7 @@ global.logger    = new Logger();
 global.data_ts   = {};
 global.data_plan = config.price_plan;
 global.data_pos  = config.price_pos;
+global.data_date = moment().format("YYYY-MM-DD");
 
 (async function() {
     /*

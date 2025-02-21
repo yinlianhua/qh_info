@@ -44,7 +44,7 @@ async function check_time(std_time, type="qh") {
 
     let st5  = st1 +   0 * 60;
     let et5  = st5 + 120 * 60;
-    let st6  = et5 +  90 * 60;
+    let st6  = et5 + 120 * 60;
     let et6  = st6 + 120 * 60;
 
     if (day >= 1 && day <= 5) {

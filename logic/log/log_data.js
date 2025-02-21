@@ -32,9 +32,9 @@ const data_log = async function(std_time, info_list, qh_pos) {
     let pos_map = _.indexBy(qh_pos, "持仓名称");
 
     let time = moment().format("YYYY-MM-DD HH:mm:ss");
-    logs.push("+-------------------------------------------------------------------------------------------+---------------------|");
-    logs.push(`|                               ${time}                                         |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(5)})     |`);
-    logs.push("+-------------------------------------------------------------------------------------------+---------------------|");
+    logs.push("+-----------------------------------------------------------------------+----------------------|");
+    logs.push(`|                        ${time}                            |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(5)})      |`);
+    logs.push("+-----------------------------------------------------------------------+----------------------|");
 
     for (let info of info_list) {
         info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(3);
@@ -48,20 +48,21 @@ const data_log = async function(std_time, info_list, qh_pos) {
         info["波动量"] = String(info["波动量"]).padStart(4);
         info["回撤比"] = String(info["回撤比"]).padStart(3);
 
-        let qh_log = `| ${info["子名称"]} - 开盘价:${info["开盘价"]} 最新价:${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
+        // let qh_log = `| ${info["子名称"]} - 开盘价:${info["开盘价"]} 最新价:${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
+        let qh_log = `| ${info["子名称"]} - ${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
 
         if (pos_map[info["子名称"]] != undefined) {
             let pos_info = pos_map[info["子名称"]];
             // 添加持仓信息
-            qh_log += ` ${pos_info["持仓类型"]}${String(pos_info["持仓数量"]).padStart(2)} 手 ${String(pos_info["持仓点位"]).padStart(5)} ${String(pos_info["持仓盈亏"]).padStart(5)} |`;
+            qh_log += ` ${pos_info["持仓类型"]}${String(pos_info["持仓数量"]).padStart(2)} 手 ${String(pos_info["持仓点位"]).padStart(6)} ${String(pos_info["持仓盈亏"]).padStart(5)} |`;
         } else {
-            qh_log += "                     |";
+            qh_log += "                      |";
         }
 
         logs.push(qh_log);
     }
 
-    logs.push("+-------------------------------------------------------------------------------------------+---------------------|");
+    logs.push("+-----------------------------------------------------------------------+----------------------|");
     // logs.push("");
 
     for (let log of logs) {
