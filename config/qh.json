@@ -12,17 +12,19 @@
         "DEMO"  : { "type" : "多", "count" :  1, "cost" :   3486 },
         "f纯碱"  : { "type" : "多", "count" :  2, "cost" :   1450 },
         "f燃油"  : { "type" : "空", "count" :  1, "cost" :   3680 },
-        "烧碱"  : { "type" : "空", "count" :  1, "cost" :   3200 },
+        "f烧碱"  : { "type" : "空", "count" :  1, "cost" :   3200 },
 
         "焦煤"  : { "type" : "多", "count" :  1, "cost" :   1142 },
         "f棉花"  : { "type" : "多", "count" :  1, "cost" :  13560 },
         "硅铁"  : { "type" : "多", "count" :  2, "cost" :   6370 },
         "红枣"  : { "type" : "多", "count" :  1, "cost" :   9450 },
         "f尿素"  : { "type" : "多", "count" :  2, "cost" :   1770 },
-        "塑料"  : { "type" : "多", "count" :  1, "cost" :   7840 },
+        "f塑料"  : { "type" : "多", "count" :  1, "cost" :   7840 },
         "玻璃"  : { "type" : "多", "count" :  2, "cost" :   1377 },
-        "白银"  : { "type" : "空", "count" :  1, "cost" :   8078 },
-        "沥青"  : { "type" : "空", "count" :  1, "cost" :   3840 }
+        "甲醇"  : { "type" : "多", "count" :  1, "cost" :   2575 },
+        "f塑料"  : { "type" : "多", "count" :  1, "cost" :   7860 },
+        "f白银"  : { "type" : "空", "count" :  1, "cost" :   8078 },
+        "f沥青"  : { "type" : "空", "count" :  1, "cost" :   3840 }
     },
     "price_plan" : {},
     "xxx" : {
@@ -36,12 +38,13 @@
         "沥青" : "BU0",
         "白银" : "AG0",
         "焦煤" : "JM0",
-        "塑料" : "L0",
         "玻璃" : "FG0",
         "硅铁" : "SF0",
         "红枣" : "CJ0",
         "尿素" : "UR0",
         "白糖" : "SR0",
+        "塑料" : "L0",
+        "甲醇" : "MA0",
         "棉花" : "CF0",
 
         "燃油" : "FU0",

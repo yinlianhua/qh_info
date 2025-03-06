@@ -34,36 +34,47 @@ const data_log = async function(std_time, info_list, qh_pos) {
     let time = moment().format("YYYY-MM-DD HH:mm:ss");
     logs.push("+-----------------------------------------------------------------------+----------------------|");
     logs.push(`|                        ${time}                            |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(5)})      |`);
-    logs.push("+-----------------------------------------------------------------------+----------------------|");
+    // logs.push("+-----------------------------------------------------------------------+----------------------|");
 
-    for (let info of info_list) {
-        info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(3);
-        info["高位差"] = String(info["最高价"]-info["最新价"]).padStart(3);
-        info["开盘价"] = String(info["开盘价"]).padStart(5);
-        info["最高价"] = String(info["最高价"]).padStart(5);
-        info["最低价"] = String(info["最低价"]).padStart(5);
-        info["最新价"] = String(info["最新价"]).padStart(5);
-        info["结算价"] = String(info["结算价"]).padStart(5);
-        info["昨结算"] = String(info["昨结算"]).padStart(5);
-        info["波动量"] = String(info["波动量"]).padStart(4);
-        info["回撤比"] = String(info["回撤比"]).padStart(3);
+    let data_list1 = _.filter(info_list, (elem) => { return elem["多空态"] == "强多"; });
+    let data_list2 = _.filter(info_list, (elem) => { return elem["多空态"] == "偏多"; });
+    let data_list3 = _.filter(info_list, (elem) => { return elem["多空态"] == "偏空"; });
+    let data_list4 = _.filter(info_list, (elem) => { return elem["多空态"] == "强空"; });
 
-        // let qh_log = `| ${info["子名称"]} - 开盘价:${info["开盘价"]} 最新价:${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
-        let qh_log = `| ${info["子名称"]} - ${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
-
-        if (pos_map[info["子名称"]] != undefined) {
-            let pos_info = pos_map[info["子名称"]];
-            // 添加持仓信息
-            qh_log += ` ${pos_info["持仓类型"]}${String(pos_info["持仓数量"]).padStart(2)} 手 ${String(pos_info["持仓点位"]).padStart(6)} ${String(pos_info["持仓盈亏"]).padStart(5)} |`;
-        } else {
-            qh_log += "                      |";
+    for (let data_list of [ data_list1, data_list2, data_list3, data_list4 ]) {
+        if (data_list.length == 0) {
+            continue;
         }
 
-        logs.push(qh_log);
+        logs.push(`+----------------------------------${data_list[0]["多空态"]}---------------------------------+----------------------|`);
+
+        for (let info of data_list) {
+            info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(3);
+            info["高位差"] = String(info["最高价"]-info["最新价"]).padStart(3);
+            info["开盘价"] = String(info["开盘价"]).padStart(5);
+            info["最高价"] = String(info["最高价"]).padStart(5);
+            info["最低价"] = String(info["最低价"]).padStart(5);
+            info["最新价"] = String(info["最新价"]).padStart(5);
+            info["结算价"] = String(info["结算价"]).padStart(5);
+            info["昨结算"] = String(info["昨结算"]).padStart(5);
+            info["波动量"] = String(info["波动量"]).padStart(4);
+            info["回撤比"] = String(info["回撤比"]).padStart(3);
+
+            let qh_log = `| ${info["子名称"]} - ${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
+
+            if (pos_map[info["子名称"]] != undefined) {
+                let pos_info = pos_map[info["子名称"]];
+                // 添加持仓信息
+                qh_log += ` ${pos_info["持仓类型"]}${String(pos_info["持仓数量"]).padStart(2)} 手 ${String(pos_info["持仓点位"]).padStart(6)} ${String(pos_info["持仓盈亏"]).padStart(5)} |`;
+            } else {
+                qh_log += "                      |";
+            }
+
+            logs.push(qh_log);
+        }
     }
 
     logs.push("+-----------------------------------------------------------------------+----------------------|");
-    // logs.push("");
 
     for (let log of logs) {
         global.logger.info(log);
