@@ -46,7 +46,7 @@ const data_log = async function(std_time, info_list, qh_pos) {
             continue;
         }
 
-        logs.push(`+----------------------------------${data_list[0]["多空态"]}---------------------------------+----------------------|`);
+        logs.push(`+--------------------------------------- ${data_list[0]["多空态"]} --------------------------+----------------------|`);
 
         for (let info of data_list) {
             info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(3);
