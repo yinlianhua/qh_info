@@ -1,5 +1,6 @@
 {
     "db_path"      : "/Users/yinlianhua/WorkSpace/GitProjects/prj_free/qh_service/db/qh.db3",
     "qh_url_daily" : "https://stock2.finance.sina.com.cn/futures/api/jsonp.php//InnerFuturesNewService.getDailyKLine?symbol=CODE",
-    "qh_url_min"   : "https://stock2.finance.sina.com.cn/futures/api/jsonp.php//InnerFuturesNewService.getFewMinLine?symbol=CODE&type=TIME"
+    "qh_url_min"   : "https://stock2.finance.sina.com.cn/futures/api/jsonp.php//InnerFuturesNewService.getFewMinLine?symbol=CODE&type=TIME",
+    "ag_url_min"   : "https://gu.sina.cn/ft/api/jsonp.php/%20/GlobalService.getMink?symbol=XAG&type=TIME"
 }

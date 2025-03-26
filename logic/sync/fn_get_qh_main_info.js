@@ -1,6 +1,6 @@
 /**
  * Date : 2025-03-25
- * By   : yinlianhua@ucloud.cn
+ * By   : yinlianhua@sina.cn
  **/
 
 'use strict';
@@ -11,8 +11,18 @@ let config = require("../../config/basic.json");
 let http   = require("../../libs/http");
 let db     = require('../../libs/sqlite3');
 
-// 同步期货净值
-const sync_qh_data = async (new_list=[]) => {
+// 获取期货信息
+const fn_get_qh_main_info = async (new_list=[]) => {
+    let get_sql_map = require("./fn_get_sql_map");
+
+    let sql_map = get_sql_map("L2505");
+
+    console.log(sql_map);
+
+    /*
+    // 全量期货列表
+    let sql_all_qh_list = `SELECT * FROM t_qh_list WHERE type != "历史";`;
+
     await db.connect(config.db_path);
 
     let res = {
@@ -66,6 +76,7 @@ const sync_qh_data = async (new_list=[]) => {
     await db.close();
 
     return res;
+    */
 };
 
-module.exports = sync_qh_data;
+module.exports = fn_get_qh_main_info;
