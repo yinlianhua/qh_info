@@ -40,23 +40,14 @@ const sync_qh_data = async (new_list=[]) => {
 
     console.log(to_sync_list.res);
 
-    let times = [
-        // 1,
-        5,
-        // 15,
-        // 30,
-        // 60,
-        // 120,
-        // 240,
-        // "day"
-    ]
+    let times = [ 1, 5, 15, 60, 240, "day" ];
 
     sync_data: for (let time of times) {
-        for (let elem of to_sync_list.res) {
+        for (let data of to_sync_list.res) {
             let table = time == "day" ? "t_qh_data_day" : `t_qh_data_${time}_min`;
             let url   = time == "day" ? config.qh_url_daily : config.qh_url_min;
 
-            url = url.replace("CODE", elem.code);
+            url = url.replace("CODE", data.code);
             url = url.replace("TIME", time);
 
             let data_str = await http.get(url, {}, false);
@@ -69,48 +60,14 @@ const sync_qh_data = async (new_list=[]) => {
 
             let values = JSON.parse(data_str.res.split("(")[1].split(")")[0]);
 
-            // TODO: 判断是否存在
-            for (let info of values) {
+            for (let elem of values) {
                 let sql = `INSERT INTO ${table} (code, name, date, v_o, v_c, v_h, v_l) VALUES (?,?,?,?,?,?,?)`;
-                let val = [ elem.code, elem.name, info.d, info.o, info.c, info.h, info.l ];
-
-                console.log(sql)
-                console.log(val)
-                let add_res = await db.set(sql, val);
-                console.log(add_res)
+                let val = [ data.code, data.name, elem.d, elem.o, elem.c, elem.h, elem.l ];
+                await db.set(sql, val);
             }
 
-            // console.log(values)
         } 
     }
-
-    /*
-    for (let elem of new_list) {
-        // 判断是否存在
-        let info = await db.get(`SELECT * FROM t_fund_net_worth_list WHERE code = "${elem.code}" AND date = "${elem.date}";`);
-
-        if (info.err) {
-            res.err = true;
-            res.res = info.res;
-            break;
-        }
-
-        let sql = "INSERT INTO t_fund_net_worth_list(code, name, jjjz, ljjz, date) VALUES(?,?,?,?,?)";
-        let val = [ elem.code, elem.name, elem.jjjz, elem.ljjz, elem.date ];
-
-        if (info.res.length) {
-            sql = "UPDATE t_fund_net_worth_list SET jjjz = ?, ljjz = ? WHERE code = ? AND date = ?";
-            val = [ elem.jjjz, elem.ljjz, elem.code, elem.date ];
-        }
-
-        let add_res = await db.set(sql, val);
-        if (add_res.err) {
-            res.err = true;
-            res.res = add_res.err;
-            break;
-        }
-    }
-    */
 
     await db.close();
 
