@@ -18,9 +18,9 @@ const fn_log_qh_main_info = async (codes=[]) => {
     let logs = [];
     let no   = 0;
 
-    logs.push("+----+-------+---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+");
-    logs.push(`|    |  Code | Score   | Latest  | MA_1MIN_180 | MA_5MIN_120 | MA_15MIN_90 |   MA_1H_60  |   MA_4H_20  |  MA_Day_10  |    Name   |`);
-    logs.push("+----+-------+---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+");
+    logs.push("+----+--------+---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+");
+    logs.push(`|    |  Code  | Score   | Latest  | MA_1MIN_180 | MA_5MIN_120 | MA_15MIN_90 |   MA_1H_60  |   MA_4H_20  |  MA_Day_10  |    Name   |`);
+    logs.push("+----+--------+---------+---------+-------------+-------------+-------------+-------------+-------------+-------------+-----------+");
 
     /*
     {
@@ -39,7 +39,7 @@ const fn_log_qh_main_info = async (codes=[]) => {
     for (let code of codes) {
         no++;
         let data = await fn_get_qh_main_info(code);
-        logs.push(`| ${no.toString().padStart(2)} | ${data.code} |         | ${data.latest} |   ${data.avg_1_180}   |   ${data.avg_5_120}   |   ${data.avg_15_90}   |   ${data.avg_60_60}   |   ${data.avg_240_20}   |   ${data.avg_day_10}   | ${data.name}`);
+        logs.push(`| ${no.toString().padStart(2)} | ${data.code.padStart(6)} |         | ${data.latest} |   ${data.avg_1_180}   |   ${data.avg_5_120}   |   ${data.avg_15_90}   |   ${data.avg_60_60}   |   ${data.avg_240_20}   |   ${data.avg_day_10}   | ${data.name}`);
     }
 
     /*
