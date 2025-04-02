@@ -13,7 +13,7 @@ let db     = require('../../libs/sqlite3');
 
 // 获取 SQL 列表
 const fn_get_sql_map = async (code) => {
-    let duration = [ 5, 10, 15, 20, 25, 30, 60, 90, 120, 150, 180];
+    let duration = [ 10, 12, 20, 30, 60, 90, 120, 150, 180, 210, 240];
     let table_list = [
         "t_qh_data_1_min",   // 期货1分钟值
         "t_qh_data_5_min",   // 期货5分钟值

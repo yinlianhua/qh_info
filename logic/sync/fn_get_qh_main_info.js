@@ -21,29 +21,29 @@ const fn_get_qh_main_info = async (code="") => {
 
     let [
         data_latest,
-        data_min_1_180,
-        data_min_5_120,
-        data_min_15_90,
-        data_min_60_60,
-        data_min_240_20,
+        data_min_15_120,
+        data_min_15_240,
+        data_min_240_12,
         data_min_day_10,
+        data_min_day_30,
+        data_min_day_60,
     ] = await Promise.all([
         db.get(sql_map.sql_t_qh_data_latest),
-        db.get(sql_map.sql_t_qh_data_1_min_180),
-        db.get(sql_map.sql_t_qh_data_5_min_120),
-        db.get(sql_map.sql_t_qh_data_15_min_90),
-        db.get(sql_map.sql_t_qh_data_60_min_60),
-        db.get(sql_map.sql_t_qh_data_240_min_20),
+        db.get(sql_map.sql_t_qh_data_15_min_120),
+        db.get(sql_map.sql_t_qh_data_15_min_240),
+        db.get(sql_map.sql_t_qh_data_240_min_12),
         db.get(sql_map.sql_t_qh_data_day_10),
+        db.get(sql_map.sql_t_qh_data_day_30),
+        db.get(sql_map.sql_t_qh_data_day_60),
     ]);
 
     data_latest     = data_latest.res[0];
-    data_min_1_180  = data_min_1_180.res[0];
-    data_min_5_120  = data_min_5_120.res[0];
-    data_min_15_90  = data_min_15_90.res[0];
-    data_min_60_60  = data_min_60_60.res[0];
-    data_min_240_20 = data_min_240_20.res[0];
+    data_min_15_120 = data_min_15_120.res[0];
+    data_min_15_240 = data_min_15_240.res[0];
+    data_min_240_12 = data_min_240_12.res[0];
     data_min_day_10 = data_min_day_10.res[0];
+    data_min_day_30 = data_min_day_30.res[0];
+    data_min_day_60 = data_min_day_60.res[0];
 
     await db.close();
 
@@ -51,24 +51,24 @@ const fn_get_qh_main_info = async (code="") => {
         "code"       : data_latest.code,
         "name"       : data_latest.name,
         "latest"     : data_latest.v_c.toFixed(2),
-        "avg_1_180"  : data_min_1_180.avg.toFixed(2),
-        "max_1_180"  : data_min_1_180.max.toFixed(2),
-        "min_1_180"  : data_min_1_180.min.toFixed(2),
-        "avg_5_120"  : data_min_5_120.avg.toFixed(2),
-        "max_5_120"  : data_min_5_120.max.toFixed(2),
-        "min_5_120"  : data_min_5_120.min.toFixed(2),
-        "avg_15_90"  : data_min_15_90.avg.toFixed(2),
-        "max_15_90"  : data_min_15_90.max.toFixed(2),
-        "min_15_90"  : data_min_15_90.min.toFixed(2),
-        "avg_60_60"  : data_min_60_60.avg.toFixed(2),
-        "max_60_60"  : data_min_60_60.max.toFixed(2),
-        "min_60_60"  : data_min_60_60.min.toFixed(2),
-        "avg_240_20" : data_min_240_20.avg.toFixed(2),
-        "max_240_20" : data_min_240_20.max.toFixed(2),
-        "min_240_20" : data_min_240_20.min.toFixed(2),
+        "avg_15_120" : data_min_15_120.avg.toFixed(2),
+        "max_15_120" : data_min_15_120.max.toFixed(2),
+        "min_15_120" : data_min_15_120.min.toFixed(2),
+        "avg_15_240" : data_min_15_240.avg.toFixed(2),
+        "max_15_240" : data_min_15_240.max.toFixed(2),
+        "min_15_240" : data_min_15_240.min.toFixed(2),
+        "avg_240_12" : data_min_240_12.avg.toFixed(2),
+        "max_240_12" : data_min_240_12.max.toFixed(2),
+        "min_240_12" : data_min_240_12.min.toFixed(2),
         "avg_day_10" : data_min_day_10.avg.toFixed(2),
         "max_day_10" : data_min_day_10.max.toFixed(2),
         "min_day_10" : data_min_day_10.min.toFixed(2),
+        "avg_day_30" : data_min_day_30.avg.toFixed(2),
+        "max_day_30" : data_min_day_30.max.toFixed(2),
+        "min_day_30" : data_min_day_30.min.toFixed(2),
+        "avg_day_60" : data_min_day_60.avg.toFixed(2),
+        "max_day_60" : data_min_day_60.max.toFixed(2),
+        "min_day_60" : data_min_day_60.min.toFixed(2),
     };
 };
 

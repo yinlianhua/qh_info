@@ -12,7 +12,7 @@ let http   = require("../../libs/http");
 let db     = require('../../libs/sqlite3');
 
 // 同步期货净值
-const sync_qh_data = async (new_list=[]) => {
+const sync_qh_data = async (new_list=[], only_latest=true) => {
     await db.connect(config.db_path);
 
     let res = {
@@ -34,7 +34,8 @@ const sync_qh_data = async (new_list=[]) => {
 
     console.log(to_sync_list.res);
 
-    let times = [ 1, 5, 15, 60, 240, "day" ];
+    // let times = [ 1, 5, 15, 60, 240, "day" ];
+    let times = [ 5, 15, 60, 240, "day" ];
 
     sync_data: for (let time of times) {
         for (let data of to_sync_list.res) {
@@ -53,6 +54,10 @@ const sync_qh_data = async (new_list=[]) => {
             }
 
             let values = JSON.parse(data_str.res.split("(")[1].split(")")[0]);
+
+            if (only_latest) {
+                values = values.reverse().slice(0, parseInt(values.length/10));
+            }
 
             for (let elem of values) {
                 let sql = `INSERT INTO ${table} (code, name, date, v_o, v_c, v_h, v_l) VALUES (?,?,?,?,?,?,?)`;
