@@ -35,7 +35,7 @@ const fn_get_sql_map = async (code) => {
     }
 
     // 获取最新值
-    res["sql_t_qh_data_latest"] = `SELECT * FROM t_qh_data_1_min WHERE code = "${code}" ORDER BY date DESC LIMIT 1;`;
+    res["sql_t_qh_data_latest"] = `SELECT * FROM t_qh_data_5_min WHERE code = "${code}" ORDER BY date DESC LIMIT 1;`;
 
     return res;
 };

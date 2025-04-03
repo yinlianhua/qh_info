@@ -29,11 +29,22 @@ const fn_log_qh_main_info = async (codes=[]) => {
 
         let score = 0;
 
-        if (data.latest >= data.avg_15_120) { score += 1;};
-        if (data.latest >= data.avg_15_240) { score += 1;};
-        if (data.latest >= data.avg_240_12) { score += 1;};
+        score += data.latest >= data.avg_15_120 ? 1 : -1;
+        score += data.latest >= data.avg_15_240 ? 1 : -1;
+        score += data.latest >= data.avg_240_12 ? 1 : -1;
 
-        let c_score      = score >= 2 ? "red" : "green";
+        score *= data.latest > data.avg_day_30 ? -1 : 1;
+
+        /*
+        if (data.latest >= data.avg_15_120) { score += 1;};
+        if (data.latest >= data.avg_15_240) { score += 2;};
+        if (data.latest >= data.avg_240_12) { score += 3;};
+        */
+
+        let c_score = "white";
+        if (score >=  2) {c_score = "red";};
+        if (score <= -2) {c_score = "green";};
+
         let c_avg_15_120 = data.latest >= data.avg_15_120 ? "red" : "green";
         let c_avg_15_240 = data.latest >= data.avg_15_240 ? "red" : "green";
         let c_avg_240_12 = data.latest >= data.avg_240_12 ? "red" : "green";
@@ -55,7 +66,7 @@ const fn_log_qh_main_info = async (codes=[]) => {
         let c_max_day_30 = data.latest >= data.max_day_30 ? "red" : "green";
         let c_max_day_60 = data.latest >= data.max_day_60 ? "red" : "green";
 
-        let f_score      = chalk[c_score](score);
+        let f_score      = chalk[c_score](score.toString().padStart(2));
         let f_code       = chalk["yellow"](data.code.padStart(6));
         let f_latest     = chalk["yellow"](data.latest.toString().padStart(8));
         let f_name       = chalk["yellow"](data.name);
@@ -79,7 +90,7 @@ const fn_log_qh_main_info = async (codes=[]) => {
         let f_max_day_60 = chalk[c_max_day_60](data.max_day_60.toString().padStart(8));
 
 
-        logs.push(`| ${no.toString().padStart(2)} | ${f_code} |   ${f_score}   | ${f_latest} | ${f_avg_15_120}, ${f_min_15_120}, ${f_max_15_120} | ${f_avg_15_240}, ${f_min_15_240}, ${f_max_15_240} | ${f_avg_240_12}, ${f_min_240_12}, ${f_max_240_12} | ${f_avg_day_10}, ${f_min_day_10}, ${f_max_day_10} | ${f_avg_day_30}, ${f_min_day_30}, ${f_max_day_30} | ${f_avg_day_60}, ${f_min_day_60}, ${f_max_day_60} | ${f_name}`);
+        logs.push(`| ${no.toString().padStart(2)} | ${f_code} |   ${f_score}  | ${f_latest} | ${f_avg_15_120}, ${f_min_15_120}, ${f_max_15_120} | ${f_avg_15_240}, ${f_min_15_240}, ${f_max_15_240} | ${f_avg_240_12}, ${f_min_240_12}, ${f_max_240_12} | ${f_avg_day_10}, ${f_min_day_10}, ${f_max_day_10} | ${f_avg_day_30}, ${f_min_day_30}, ${f_max_day_30} | ${f_avg_day_60}, ${f_min_day_60}, ${f_max_day_60} | ${f_name}`);
         logs.push("+----+--------+-------+----------+------------------------------+------------------------------+------------------------------+------------------------------+------------------------------+------------------------------+----------+");
     }
 
