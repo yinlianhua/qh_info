@@ -32,7 +32,7 @@ const alarm_between = async function(config={}, qh_pos=[]) {
         // }
 
         for (let [type, val] of Object.entries(global.data_plan[name])) {
-            console.log(name, type, last, val);
+            // console.log(name, type, last, val);
             let msg = "";
 
             if (type == "上限" && last > val) {
