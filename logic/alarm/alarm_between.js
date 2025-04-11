@@ -22,26 +22,31 @@ const alarm_between = async function(config={}, qh_pos=[]) {
         let min  = info["最低价"];
         let max  = info["最高价"];
 
-        if (global.data_plan[name] == undefined || global.data_date != new_date) {
-            global.data_plan[name] = { "下限" : min, "上限" : max };
+        if (global.data_plan[name] == undefined) {
+            continue;
         }
 
-        let plan = global.data_plan[name];
+        // 自动使用每日最高/最低
+        // if (global.data_plan[name] == undefined || global.data_date != new_date) {
+        //     global.data_plan[name] = { "下限" : min, "上限" : max };
+        // }
 
-        for (let [type, val] of Object.entries(plan)) {
-            // console.log(name, type, last, val)
+        for (let [type, val] of Object.entries(global.data_plan[name])) {
+            console.log(name, type, last, val);
             let msg = "";
 
             if (type == "上限" && last > val) {
                 msg = `☆ ${name} 最新价 ${last} 高于 ${val}`;
+                delete global.data_plan[name][type];
                 // delete global.data_plan[name][type][val];
-                global.data_plan[name][type] = last;
+                // global.data_plan[name][type] = last;
             }
 
             if (type == "下限" && last < val) {
                 msg = `☆ ${name} 最新价 ${last} 低于 ${val}`;
+                delete global.data_plan[name][type];
                 // delete global.data_plan[name][type][val];
-                global.data_plan[name][type] = last;
+                // global.data_plan[name][type] = last;
             }
 
             if (msg == "") {
@@ -50,6 +55,7 @@ const alarm_between = async function(config={}, qh_pos=[]) {
 
             await http.get(encodeURI(`${url}${msg}`), {}, false);
         }
+
     }
 
     global.data_date = new_date;
