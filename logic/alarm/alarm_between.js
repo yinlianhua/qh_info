@@ -59,9 +59,6 @@ const alarm_between = async function(config={}, qh_pos=[]) {
 
             await http.get(encodeURI(`${url}${msg}`), {}, false);
         }
-
-        console.log(global.data_plan)
-
     }
 
     global.data_date = new_date;
