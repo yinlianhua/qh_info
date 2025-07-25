@@ -19,12 +19,13 @@ const policy_posit = async function (price_info, qh_data) {
         }
 
         // 无配价,跳过
-        if (price_info[info["子名称"]] == undefined) {
+        let real_name = info["子名称"].split("_")[0];
+        if (price_info[real_name] == undefined) {
             continue;
         }
 
         let pos_info   = global.data_pos[info["子名称"]];
-        let unit_price = price_info[info["子名称"]];
+        let unit_price = price_info[real_name];
 
         let pos_price = {
             "持仓名称" : info["子名称"],
@@ -35,8 +36,11 @@ const policy_posit = async function (price_info, qh_data) {
             "盈亏金额" : 0.00
         }
 
-        if (pos_info.type == "多") { pos_price["盈亏金额"] = (info["买入价"] - pos_info.cost) * pos_info.count * unit_price; }
-        if (pos_info.type == "空") { pos_price["盈亏金额"] = (pos_info.cost - info["卖出价"]) * pos_info.count * unit_price; }
+        // if (pos_info.type == "多") { pos_price["盈亏金额"] = (info["买入价"] - pos_info.cost) * pos_info.count * unit_price; }
+        // if (pos_info.type == "空") { pos_price["盈亏金额"] = (pos_info.cost - info["卖出价"]) * pos_info.count * unit_price; }
+
+        if (pos_info.type == "多") { pos_price["盈亏金额"] = (info["最新价"] - pos_info.cost) * pos_info.count * unit_price; }
+        if (pos_info.type == "空") { pos_price["盈亏金额"] = (pos_info.cost - info["最新价"]) * pos_info.count * unit_price; }
 
         pos_price["持仓盈亏"] = pos_price["盈亏金额"] > 0 ? `+${String(pos_price["盈亏金额"])}` : `${String(pos_price["盈亏金额"])}`;
 

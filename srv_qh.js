@@ -33,8 +33,8 @@ global.data_date = moment().format("YYYY-MM-DD");
 
     do {
         let std_time = moment().startOf("minute").unix();
-        if (await check(std_time)) {
+        // if (await check(std_time)) {
             await price(config, std_time);
-        }
+        // }
     } while(true);
 })()

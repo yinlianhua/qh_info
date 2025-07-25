@@ -37,14 +37,18 @@ const alarm_between = async function(config={}, qh_pos=[]) {
 
             if (type == "上限" && last > val) {
                 msg = `☆ ${name} 最新价 ${last} 高于 ${val}`;
-                delete global.data_plan[name][type];
+                global.data_plan[name][type] = last * 1.005;
+
+                // delete global.data_plan[name][type];
                 // delete global.data_plan[name][type][val];
                 // global.data_plan[name][type] = last;
             }
 
             if (type == "下限" && last < val) {
                 msg = `☆ ${name} 最新价 ${last} 低于 ${val}`;
-                delete global.data_plan[name][type];
+                global.data_plan[name][type] = last * 0.995;
+
+                // delete global.data_plan[name][type];
                 // delete global.data_plan[name][type][val];
                 // global.data_plan[name][type] = last;
             }
@@ -55,6 +59,8 @@ const alarm_between = async function(config={}, qh_pos=[]) {
 
             await http.get(encodeURI(`${url}${msg}`), {}, false);
         }
+
+        console.log(global.data_plan)
 
     }
 
