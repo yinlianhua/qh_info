@@ -32,25 +32,28 @@ const data_log = async function(std_time, info_list, qh_pos) {
     let pos_map = _.indexBy(qh_pos, "持仓名称");
 
     let time = moment().format("YYYY-MM-DD HH:mm:ss");
-    logs.push("+-----------------------------------------------------------------------+----------------------|");
-    logs.push(`|                        ${time}                            |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(5)})      |`);
-    // logs.push("+-----------------------------------------------------------------------+----------------------|");
+    let now = moment().unix();
+    let end = moment(`${moment().format("YYYY-MM-DD")} 15:00:00`).unix();
 
-    let data_list1 = _.filter(info_list, (elem) => { return elem["多空态"] == "强多"; });
-    let data_list2 = _.filter(info_list, (elem) => { return elem["多空态"] == "偏多"; });
-    let data_list3 = _.filter(info_list, (elem) => { return elem["多空态"] == "偏空"; });
-    let data_list4 = _.filter(info_list, (elem) => { return elem["多空态"] == "强空"; });
+    logs.push("+---------------------------------------------------------------------------+----------------------|");
+    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]            |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(5)})      |`);
+    // logs.push("+---------------------------------------------------------------------------+----------------------|");
+
+    let data_list1 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强多"; }), (elem) => {return elem["回撤比"];});
+    let data_list2 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "偏多"; }), (elem) => {return elem["回撤比"];});
+    let data_list3 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "偏空"; }), (elem) => {return elem["回撤比"];});
+    let data_list4 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强空"; }), (elem) => {return elem["回撤比"];});
 
     for (let data_list of [ data_list1, data_list2, data_list3, data_list4 ]) {
         if (data_list.length == 0) {
             continue;
         }
 
-        logs.push(`+--------------------------------------- ${data_list[0]["多空态"]} --------------------------+----------------------|`);
+        logs.push(`+------------------------------------------- ${data_list[0]["多空态"]} --------------------------+----------------------|`);
 
         for (let info of data_list) {
-            info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(3);
-            info["高位差"] = String(info["最高价"]-info["最新价"]).padStart(3);
+            info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(5);
+            info["高位差"] = String(info["最高价"]-info["最新价"]).padStart(5);
             info["开盘价"] = String(info["开盘价"]).padStart(5);
             info["最高价"] = String(info["最高价"]).padStart(5);
             info["最低价"] = String(info["最低价"]).padStart(5);
@@ -74,7 +77,7 @@ const data_log = async function(std_time, info_list, qh_pos) {
         }
     }
 
-    logs.push("+-----------------------------------------------------------------------+----------------------|");
+    logs.push("+---------------------------------------------------------------------------+----------------------|");
 
     for (let log of logs) {
         global.logger.info(log);
