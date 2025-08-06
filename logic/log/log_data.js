@@ -48,7 +48,7 @@ const data_log = async function(std_time, info_list, qh_pos) {
     let end = moment(`${moment().format("YYYY-MM-DD")} 15:00:00`).unix();
 
     logs.push("+--------------------------------------------------------------------------------+----------------------|");
-    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                 |    盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})   |`);
+    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                 |    盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})    |`);
     // logs.push("+---------------------------------------------------------------------------+----------------------|");
 
     let data_list1 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强多"; }), (elem) => {return elem["回撤比"];});
