@@ -21,6 +21,8 @@ const fn_get_qh_main_info = async (code="") => {
 
     let [
         data_latest,
+        data_min_05_120,
+        data_min_05_240,
         data_min_15_120,
         data_min_15_240,
         data_min_240_12,
@@ -29,6 +31,8 @@ const fn_get_qh_main_info = async (code="") => {
         data_min_day_60,
     ] = await Promise.all([
         db.get(sql_map.sql_t_qh_data_latest),
+        db.get(sql_map.sql_t_qh_data_5_min_120),
+        db.get(sql_map.sql_t_qh_data_5_min_240),
         db.get(sql_map.sql_t_qh_data_15_min_120),
         db.get(sql_map.sql_t_qh_data_15_min_240),
         db.get(sql_map.sql_t_qh_data_240_min_12),
@@ -38,6 +42,8 @@ const fn_get_qh_main_info = async (code="") => {
     ]);
 
     data_latest     = data_latest.res[0];
+    data_min_05_120 = data_min_05_120.res[0];
+    data_min_05_240 = data_min_05_240.res[0];
     data_min_15_120 = data_min_15_120.res[0];
     data_min_15_240 = data_min_15_240.res[0];
     data_min_240_12 = data_min_240_12.res[0];
@@ -51,6 +57,12 @@ const fn_get_qh_main_info = async (code="") => {
         "code"       : data_latest.code,
         "name"       : data_latest.name,
         "latest"     : +data_latest.v_c.toFixed(2),
+        "avg_05_120" : +data_min_05_120.avg.toFixed(2),
+        "max_05_120" : +data_min_05_120.max.toFixed(2),
+        "min_05_120" : +data_min_05_120.min.toFixed(2),
+        "avg_05_240" : +data_min_05_240.avg.toFixed(2),
+        "max_05_240" : +data_min_05_240.max.toFixed(2),
+        "min_05_240" : +data_min_05_240.min.toFixed(2),
         "avg_15_120" : +data_min_15_120.avg.toFixed(2),
         "max_15_120" : +data_min_15_120.max.toFixed(2),
         "min_15_120" : +data_min_15_120.min.toFixed(2),
