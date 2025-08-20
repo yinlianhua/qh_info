@@ -60,27 +60,42 @@ const fn_get_qh_main_info = async (code="") => {
         "avg_05_120" : +data_min_05_120.avg.toFixed(2),
         "max_05_120" : +data_min_05_120.max.toFixed(2),
         "min_05_120" : +data_min_05_120.min.toFixed(2),
+        "pct_05_120" : +((data_latest.v_c - data_min_05_120.min) / (data_min_05_120.max - data_min_05_120.min)).toFixed(2),
+
         "avg_05_240" : +data_min_05_240.avg.toFixed(2),
         "max_05_240" : +data_min_05_240.max.toFixed(2),
         "min_05_240" : +data_min_05_240.min.toFixed(2),
+        "pct_05_240" : +((data_latest.v_c - data_min_05_240.min) / (data_min_05_240.max - data_min_05_240.min)).toFixed(2),
+
         "avg_15_120" : +data_min_15_120.avg.toFixed(2),
         "max_15_120" : +data_min_15_120.max.toFixed(2),
         "min_15_120" : +data_min_15_120.min.toFixed(2),
+        "pct_15_120" : +((data_latest.v_c - data_min_15_120.min) / (data_min_15_120.max - data_min_15_120.min)).toFixed(2),
+
         "avg_15_240" : +data_min_15_240.avg.toFixed(2),
         "max_15_240" : +data_min_15_240.max.toFixed(2),
         "min_15_240" : +data_min_15_240.min.toFixed(2),
+        "pct_15_240" : +((data_latest.v_c - data_min_15_240.min) / (data_min_15_240.max - data_min_15_240.min)).toFixed(2),
+
         "avg_240_12" : +data_min_240_12.avg.toFixed(2),
         "max_240_12" : +data_min_240_12.max.toFixed(2),
         "min_240_12" : +data_min_240_12.min.toFixed(2),
+        "pct_240_12" : +((data_latest.v_c - data_min_240_12.min) / (data_min_240_12.max - data_min_240_12.min)).toFixed(2),
+
         "avg_day_10" : +data_min_day_10.avg.toFixed(2),
         "max_day_10" : +data_min_day_10.max.toFixed(2),
         "min_day_10" : +data_min_day_10.min.toFixed(2),
+        "pct_day_10" : +((data_latest.v_c - data_min_day_10.min) / (data_min_day_10.max - data_min_day_10.min)).toFixed(2),
+
         "avg_day_30" : +data_min_day_30.avg.toFixed(2),
         "max_day_30" : +data_min_day_30.max.toFixed(2),
         "min_day_30" : +data_min_day_30.min.toFixed(2),
+        "pct_day_30" : +((data_latest.v_c - data_min_day_30.min) / (data_min_day_30.max - data_min_day_30.min)).toFixed(2),
+
         "avg_day_60" : +data_min_day_60.avg.toFixed(2),
         "max_day_60" : +data_min_day_60.max.toFixed(2),
         "min_day_60" : +data_min_day_60.min.toFixed(2),
+        "pct_day_60" : +((data_latest.v_c - data_min_day_60.min) / (data_min_day_60.max - data_min_day_60.min)).toFixed(2),
     };
 };
 
