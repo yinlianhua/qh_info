@@ -4,7 +4,8 @@
  **/
 
 'use strict';
-let sleep  = require('./libs/sleep');
+
+let mail = require("./libs/email");
 
 (async function() {
     let codes = [
@@ -55,13 +56,39 @@ let sleep  = require('./libs/sleep');
     ]
 
     let fn_log_qh_main_info = require("./logic/sync/fn_log_qh_main_info");
-    let logs = await fn_log_qh_main_info(codes);
+    let fn_make_qh_ejs_v1   = require("./logic/sync/fn_make_qh_ejs_v1");
 
-    for (let log of logs.res) {
-        console.log(log)
+    let data = await fn_log_qh_main_info(codes);
+    let html = await fn_make_qh_ejs_v1(data.res);
 
-        if (log == "") {
-            await sleep(500);
-        }
+    /*
+    for (let elem of data.res) {
+        console.log(`
+            code : ${elem.code}
+            name : ${elem.name}
+            score: ${elem.score}
+            latest: ${elem.latest}
+            avg_05_120: ${elem.avg_05_120.toFixed(2)}, max_05_120: ${elem.max_05_120.toFixed(2)}, min_05_120: ${elem.min_05_120.toFixed(2)}, pct_05_120: ${elem.pct_05_120.toFixed(2)}
+            avg_05_240: ${elem.avg_05_240.toFixed(2)}, max_05_240: ${elem.max_05_240.toFixed(2)}, min_05_240: ${elem.min_05_240.toFixed(2)}, pct_05_240: ${elem.pct_05_240.toFixed(2)}
+            avg_15_120: ${elem.avg_15_120.toFixed(2)}, max_15_120: ${elem.max_15_120.toFixed(2)}, min_15_120: ${elem.min_15_120.toFixed(2)}, pct_15_120: ${elem.pct_15_120.toFixed(2)}
+            avg_15_240: ${elem.avg_15_240.toFixed(2)}, max_15_240: ${elem.max_15_240.toFixed(2)}, min_15_240: ${elem.min_15_240.toFixed(2)}, pct_15_240: ${elem.pct_15_240.toFixed(2)}
+            avg_240_12: ${elem.avg_240_12.toFixed(2)}, max_240_12: ${elem.max_240_12.toFixed(2)}, min_240_12: ${elem.min_240_12.toFixed(2)}, pct_240_12: ${elem.pct_240_12.toFixed(2)}
+            avg_day_10: ${elem.avg_day_10.toFixed(2)}, max_day_10: ${elem.max_day_10.toFixed(2)}, min_day_10: ${elem.min_day_10.toFixed(2)}, pct_day_10: ${elem.pct_day_10.toFixed(2)}
+            avg_day_30: ${elem.avg_day_30.toFixed(2)}, max_day_30: ${elem.max_day_30.toFixed(2)}, min_day_30: ${elem.min_day_30.toFixed(2)}, pct_day_30: ${elem.pct_day_30.toFixed(2)}
+            avg_day_60: ${elem.avg_day_60.toFixed(2)}, max_day_60: ${elem.max_day_60.toFixed(2)}, min_day_60: ${elem.min_day_60.toFixed(2)}, pct_day_60: ${elem.pct_day_60.toFixed(2)}
+        `)
     }
+    */
+
+    /*
+    let params = {
+        "to"      : "yinlianhua@sina.cn",
+        "subject" : "最新期货信息",
+        "html"    : html
+    }
+
+    let send_res = await mail(params);
+
+    console.log(send_res)
+    */
 })()
