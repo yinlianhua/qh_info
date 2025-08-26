@@ -5,18 +5,20 @@
 
 'use strict';
 
-const moment = require("moment");
-const Logger = require("./libs/logger");
-const check  = require("./libs/check");
-const price  = require("./logic/price_qh");
-const config = require("./config/qh.json");
-const secret = require("./config/secret.json");
+const moment   = require("moment");
+const Logger   = require("./libs/logger");
+const check    = require("./libs/check");
+const price    = require("./logic/price_qh");
+const config   = require("./config/qh.json");
+const secret   = require("./config/secret.json");
+const qh_plan  = require("./config/qh_plan.json");
+const qh_price = require("./config/qh_price.json");
 
 global.mysql     = secret;
 global.logger    = new Logger();
 global.data_ts   = {};
-global.data_plan = config.price_plan;
-global.data_pos  = config.price_pos;
+global.data_plan = qh_plan;
+global.data_pos  = qh_price;
 global.data_date = moment().format("YYYY-MM-DD");
 
 (async function() {

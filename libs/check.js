@@ -57,7 +57,7 @@ async function check_time(std_time, type="qh") {
             // 时间段3
             if (now >= st3 && now <= et3) { res = true; wait = 5000; }
             // 时间段4
-            if (now >= st4 && now <= et4) { res = true; wait = 5000; }
+            // if (now >= st4 && now <= et4) { res = true; wait = 5000; } // 暂停夜盘
         } else {
             // 股票,基金
             // 时间段1
