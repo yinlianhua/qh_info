@@ -61,6 +61,10 @@ let mail = require("./libs/email");
     let data = await fn_log_qh_main_info(codes);
     let html = await fn_make_qh_ejs_v1(data.res);
 
+    for (let elem of data.res) {
+        console.log(`${elem.name} score: ${elem.score.toFixed(2).padStart(6)} latest: ${elem.latest.toFixed(2).padStart(8)} 短:  ${elem.target_short} 中: ${elem.target_medium} 长: ${elem.target_long}`)
+    }
+
     /*
     for (let elem of data.res) {
         console.log(`
@@ -76,11 +80,12 @@ let mail = require("./libs/email");
             avg_day_10: ${elem.avg_day_10.toFixed(2)}, max_day_10: ${elem.max_day_10.toFixed(2)}, min_day_10: ${elem.min_day_10.toFixed(2)}, pct_day_10: ${elem.pct_day_10.toFixed(2)}
             avg_day_30: ${elem.avg_day_30.toFixed(2)}, max_day_30: ${elem.max_day_30.toFixed(2)}, min_day_30: ${elem.min_day_30.toFixed(2)}, pct_day_30: ${elem.pct_day_30.toFixed(2)}
             avg_day_60: ${elem.avg_day_60.toFixed(2)}, max_day_60: ${elem.max_day_60.toFixed(2)}, min_day_60: ${elem.min_day_60.toFixed(2)}, pct_day_60: ${elem.pct_day_60.toFixed(2)}
+            target_short:  ${((elem.min_05_120+elem.min_05_240)/2).toFixed(2)} ~ ${((elem.max_05_120+elem.max_05_240)/2).toFixed(2)}
+            target_medium: ${((elem.min_15_120+elem.min_15_240+elem.min_240_12)/3).toFixed(2)} ~ ${((elem.max_15_120+elem.max_15_240+elem.max_240_12)/3).toFixed(2)}
+            target_long:   ${((elem.min_day_10+elem.min_day_30+elem.min_day_60)/3).toFixed(2)} ~ ${((elem.max_day_10+elem.max_day_30+elem.max_day_60)/3).toFixed(2)}
         `)
     }
-    */
 
-    /*
     let params = {
         "to"      : "yinlianhua@sina.cn",
         "subject" : "最新期货信息",

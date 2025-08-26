@@ -50,6 +50,11 @@ const fn_log_qh_main_info = async (codes=[]) => {
 
         data.score = +score.toFixed(2);
 
+        // 计算 短,中,长 区间
+        data.target_short  = `${((data.min_05_120+data.min_15_120)/2).toFixed(2).padStart(8)} ~ ${((data.max_05_120+data.max_15_120)/2).toFixed(2).padStart(8)}`;
+        data.target_medium = `${((data.min_05_240+data.min_15_240+data.min_240_12)/3).toFixed(2).padStart(8)} ~ ${((data.max_05_240+data.max_15_240+data.max_240_12)/3).toFixed(2).padStart(8)}`;
+        data.target_long   = `${((data.min_day_10+data.min_day_30+data.min_day_60)/3).toFixed(2).padStart(8)} ~ ${((data.max_day_10+data.max_day_30+data.max_day_60)/3).toFixed(2).padStart(8)}`;
+
         data_list.push(data);
     }
 
