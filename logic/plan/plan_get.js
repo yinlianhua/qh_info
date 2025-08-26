@@ -10,6 +10,8 @@ const moment = require("moment");
 const mysql  = require("../../libs/mysql_conn");
 
 const plan_get = async function(std_time) {
+    // let fn_get_qh_main_info = require("./fn_get_qh_main_info");
+
     global.data_plan = {};
 
     let plan = await mysql.connect("plan").query(`SELECT name, up_val, down_val FROM t_price_plan;`);

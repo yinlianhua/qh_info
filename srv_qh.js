@@ -33,6 +33,9 @@ global.data_date = moment().format("YYYY-MM-DD");
     await pos_get();
     */
 
+    console.log(global.data_plan);
+    console.log(global.data_pos);
+
     do {
         let std_time = moment().startOf("minute").unix();
         if (await check(std_time)) {
