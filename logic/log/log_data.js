@@ -47,8 +47,8 @@ const data_log = async function(std_time, info_list, qh_pos) {
     let now = moment().unix();
     let end = moment(`${moment().format("YYYY-MM-DD")} 15:00:00`).unix();
 
-    logs.push("+--------------------------------------------------------------------------------+----------------------|");
-    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                 |    盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})    |`);
+    logs.push("+--------------------------------------------------------------------------------------+----------------------|");
+    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                       |    盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})    |`);
     // logs.push("+---------------------------------------------------------------------------+----------------------|");
 
     let data_list1 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强多";    }), (elem) => {return elem["回撤比"];});
@@ -62,12 +62,14 @@ const data_log = async function(std_time, info_list, qh_pos) {
 
     for (let elem of data_list3) { elem["多空态"] = "震荡"; }
 
+        // "波动比" : ((str[3]-str[4])/str[8]).toFixed(2),
+
     for (let data_list of [ data_list1, data_list2, data_list3, data_list5, data_list6 ]) {
         if (data_list.length == 0) {
             continue;
         }
 
-        logs.push(`+--------------------------------------------- ${data_list[0]["多空态"]} -----------------------------+----------------------|`);
+        logs.push(`+--------------------------------------------- ${data_list[0]["多空态"]} -----------------------------------+----------------------|`);
 
         for (let info of data_list) {
             info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(5);
@@ -79,9 +81,10 @@ const data_log = async function(std_time, info_list, qh_pos) {
             info["结算价"] = String(info["结算价"]).padStart(5);
             info["昨结算"] = String(info["昨结算"]).padStart(5);
             info["波动量"] = String(info["波动量"]).padStart(4);
+            info["波动比"] = String(info["波动比"]).padStart(4);
             info["回撤比"] = String(info["回撤比"]).padStart(3);
 
-            let qh_log = `| ${info["子名称"]} - ${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} 回撤:${info["回撤比"]}% |`;
+            let qh_log = `| ${info["子名称"]} - ${info["最新价"]} [${info["低位差"]}:${info["高位差"]}] [${info["最低价"]} ~${info["最高价"]} ] ${info["多空态"]} ${info["强度比"]} 波动:${info["波动量"]} ${info["波动比"]}% 回撤:${info["回撤比"]}% |`;
 
             if (pos_map[info["子名称"]] != undefined) {
                 let pos_info = pos_map[info["子名称"]];
@@ -95,7 +98,7 @@ const data_log = async function(std_time, info_list, qh_pos) {
         }
     }
 
-    logs.push("+--------------------------------------------------------------------------------+----------------------|");
+    logs.push("+--------------------------------------------------------------------------------------+----------------------|");
 
     for (let log of logs) {
         global.logger.info(log);

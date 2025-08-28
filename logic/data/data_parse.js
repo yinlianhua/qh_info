@@ -50,6 +50,7 @@ const data_parser = async function(std_time, str_list) {
             "持仓量" : parseInt(str[13]),
             "成交量" : parseInt(str[14]),
             "波动量" : parseInt(str[3]-str[4]),
+            "波动比" : ((str[3]-str[4])/str[8]*100).toFixed(2),
             "多空态" : (str[8] - str[4]) >= (str[3] - str[8]) ? "多" : "空",
             "强度比" : "",
             "回撤值" : 0,
