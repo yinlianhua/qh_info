@@ -51,12 +51,18 @@ const data_log = async function(std_time, info_list, qh_pos) {
     logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                 |    盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})    |`);
     // logs.push("+---------------------------------------------------------------------------+----------------------|");
 
-    let data_list1 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强多"; }), (elem) => {return elem["回撤比"];});
-    let data_list2 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "偏多"; }), (elem) => {return elem["回撤比"];});
-    let data_list3 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "偏空"; }), (elem) => {return elem["回撤比"];}).reverse();
-    let data_list4 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强空"; }), (elem) => {return elem["回撤比"];}).reverse();
+    let data_list1 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强多";    }), (elem) => {return elem["回撤比"];});
+    let data_list2 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "偏多";    }), (elem) => {return elem["回撤比"];});
+    let data_list3 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "震荡偏多"; }), (elem) => {return elem["回撤比"];});
+    let data_list4 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "震荡偏空"; }), (elem) => {return elem["回撤比"];}).reverse();
+    let data_list5 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "偏空";    }), (elem) => {return elem["回撤比"];}).reverse();
+    let data_list6 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强空";    }), (elem) => {return elem["回撤比"];}).reverse();
 
-    for (let data_list of [ data_list1, data_list2, data_list3, data_list4 ]) {
+    data_list3 = [].concat(data_list3, data_list4);
+
+    for (let elem of data_list3) { elem["多空态"] = "震荡"; }
+
+    for (let data_list of [ data_list1, data_list2, data_list3, data_list5, data_list6 ]) {
         if (data_list.length == 0) {
             continue;
         }
