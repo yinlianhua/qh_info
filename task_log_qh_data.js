@@ -62,7 +62,15 @@ let mail = require("./libs/email");
     let html = await fn_make_qh_ejs_v1(data.res);
 
     for (let elem of data.res) {
-        console.log(`${elem.name} score: ${elem.score.toFixed(2).padStart(6)} latest: ${elem.latest.toFixed(2).padStart(8)} 短:  ${elem.target_short} 中: ${elem.target_medium} 长: ${elem.target_long}`)
+        // console.log(`${elem.name} score: ${elem.score.toFixed(2).padStart(6)} latest: ${elem.latest.toFixed(2).padStart(8)} 短: ${elem.target_short} 中: ${elem.target_medium} 长: ${elem.target_long}`)
+        console.log(`${elem.name} ${elem.score.toFixed(2).padStart(6)} ${elem.latest.toFixed(2).padStart(8)}`)
+        console.log(`短: ${elem.target_short}`)
+        console.log(`中: ${elem.target_medium}`)
+        console.log(`长: ${elem.target_long}`)
+    }
+
+    for (let elem of data.res) {
+        console.log(`${elem.name} score: ${elem.score.toFixed(2).padStart(6)} latest: ${elem.latest.toFixed(2).padStart(8)} 短: ${elem.target_short} 中: ${elem.target_medium} 长: ${elem.target_long}`)
     }
 
     /*

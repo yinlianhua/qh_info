@@ -47,8 +47,8 @@ const data_log = async function(std_time, info_list, qh_pos) {
     let now = moment().unix();
     let end = moment(`${moment().format("YYYY-MM-DD")} 15:00:00`).unix();
 
-    logs.push("+--------------------------------------------------------------------------------------+----------------------|");
-    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                       |    盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})    |`);
+    logs.push("+--------------------------------------------------------------------------------------+-----------------------|");
+    logs.push(`|                        ${time}  [ ${(end - now).toString().padStart(5)} 秒后收盘 ]                       |     盈亏(${String(pos_map["合计"]["持仓盈亏"]).padStart(8)})    |`);
     // logs.push("+---------------------------------------------------------------------------+----------------------|");
 
     let data_list1 = _.sortBy(_.filter(info_list, (elem) => { return elem["多空态"] == "强多";    }), (elem) => {return elem["回撤比"];});
@@ -69,7 +69,7 @@ const data_log = async function(std_time, info_list, qh_pos) {
             continue;
         }
 
-        logs.push(`+--------------------------------------------- ${data_list[0]["多空态"]} -----------------------------------+----------------------|`);
+        logs.push(`+--------------------------------------------- ${data_list[0]["多空态"]} -----------------------------------+-----------------------|`);
 
         for (let info of data_list) {
             info["低位差"] = String(info["最新价"]-info["最低价"]).padStart(5);
@@ -89,16 +89,16 @@ const data_log = async function(std_time, info_list, qh_pos) {
             if (pos_map[info["子名称"]] != undefined) {
                 let pos_info = pos_map[info["子名称"]];
                 // 添加持仓信息
-                qh_log += ` ${pos_info["持仓类型"]}${String(pos_info["持仓数量"]).padStart(2)} 手 ${String(pos_info["持仓点位"]).padStart(6)} ${String(pos_info["持仓盈亏"]).padStart(5)} |`;
+                qh_log += ` ${pos_info["持仓类型"]}${String(pos_info["持仓数量"]).padStart(2)} 手 ${String(pos_info["持仓点位"]).padStart(6)} ${String(pos_info["持仓盈亏"]).padStart(6)} |`;
             } else {
-                qh_log += "                      |";
+                qh_log += "                       |";
             }
 
             logs.push(qh_log);
         }
     }
 
-    logs.push("+--------------------------------------------------------------------------------------+----------------------|");
+    logs.push("+--------------------------------------------------------------------------------------+-----------------------|");
 
     for (let log of logs) {
         global.logger.info(log);
