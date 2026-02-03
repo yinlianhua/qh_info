@@ -9,50 +9,52 @@ let mail = require("./libs/email");
 
 (async function() {
     let codes = [
-        "AG2602",
+        "AU2604",
+        "AU2606",
         "AG2604",
-        "AO2601",
+        "AG2606",
         "AO2605",
-        "BU2601",
+        "AO2609",
         "BU2605",
-        "C2601",
+        "BU2609",
         "C2605",
-        "CF2601",
+        "C2609",
         "CF2605",
-        "CJ2601",
+        "CF2609",
         "CJ2605",
-        "FG2601",
+        "CJ2609",
         "FG2605",
-        "FU2601",
+        "FG2609",
         "FU2605",
-        "JM2601",
+        "FU2609",
         "JM2605",
-        "L2601",
+        "JM2609",
         "L2605",
-        "MA2601",
+        "L2609",
         "MA2605",
-        "PS2601",
+        "MA2609",
         "PS2605",
-        "RB2601",
+        "PS2609",
         "RB2605",
-        "SA2601",
+        "RB2609",
         "SA2605",
-        "SF2601",
+        "SA2609",
         "SF2605",
-        "SH2601",
+        "SF2609",
         "SH2605",
-        "SI2601",
+        "SH2609",
         "SI2605",
-        "SM2601",
+        "SI2609",
         "SM2605",
-        "SP2601",
+        "SM2609",
         "SP2605",
-        "SR2601",
+        "SP2609",
         "SR2605",
-        "UR2601",
+        "SR2609",
         "UR2605",
-        "V2601",
-        "V2605"
+        "UR2609",
+        "V2605",
+        "V2609"
     ]
 
     let fn_log_qh_main_info = require("./logic/sync/fn_log_qh_main_info");
@@ -61,6 +63,7 @@ let mail = require("./libs/email");
     let data = await fn_log_qh_main_info(codes);
     let html = await fn_make_qh_ejs_v1(data.res);
 
+    /*
     for (let elem of data.res) {
         // console.log(`${elem.name} score: ${elem.score.toFixed(2).padStart(6)} latest: ${elem.latest.toFixed(2).padStart(8)} 短: ${elem.target_short} 中: ${elem.target_medium} 长: ${elem.target_long}`)
         console.log(`${elem.name} ${elem.score.toFixed(2).padStart(6)} ${elem.latest.toFixed(2).padStart(8)}`)
@@ -73,7 +76,6 @@ let mail = require("./libs/email");
         console.log(`${elem.name} score: ${elem.score.toFixed(2).padStart(6)} latest: ${elem.latest.toFixed(2).padStart(8)} 短: ${elem.target_short} 中: ${elem.target_medium} 长: ${elem.target_long}`)
     }
 
-    /*
     for (let elem of data.res) {
         console.log(`
             code : ${elem.code}
@@ -93,6 +95,9 @@ let mail = require("./libs/email");
             target_long:   ${((elem.min_day_10+elem.min_day_30+elem.min_day_60)/3).toFixed(2)} ~ ${((elem.max_day_10+elem.max_day_30+elem.max_day_60)/3).toFixed(2)}
         `)
     }
+    */
+
+    console.log(html)
 
     let params = {
         "to"      : "yinlianhua@sina.cn",
@@ -103,5 +108,4 @@ let mail = require("./libs/email");
     let send_res = await mail(params);
 
     console.log(send_res)
-    */
 })()
