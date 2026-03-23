@@ -13,7 +13,7 @@ let db     = require('../../libs/sqlite3');
 
 // 获取 SQL 列表
 const fn_get_sql_map = async (code) => {
-    let duration = [ 10, 12, 20, 30, 60, 90, 120, 150, 180, 210, 240];
+    let duration = [ 10, 12, 15, 20, 30, 60, 90, 120, 150, 180, 210, 240];
     let table_list = [
         "t_qh_data_1_min",   // 期货1分钟值
         "t_qh_data_5_min",   // 期货5分钟值
@@ -35,7 +35,8 @@ const fn_get_sql_map = async (code) => {
     }
 
     // 获取最新值
-    res["sql_t_qh_data_latest"] = `SELECT * FROM t_qh_data_5_min WHERE code = "${code}" ORDER BY date DESC LIMIT 1;`;
+    // res["sql_t_qh_data_latest"] = `SELECT * FROM t_qh_data_5_min WHERE code = "${code}" ORDER BY date DESC LIMIT 1;`;
+    res["sql_t_qh_data_latest"] = `SELECT * FROM t_qh_data_1_min WHERE code = "${code}" ORDER BY date DESC LIMIT 1;`;
 
     return res;
 };

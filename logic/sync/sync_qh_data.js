@@ -34,8 +34,7 @@ const sync_qh_data = async (new_list=[], only_latest=true) => {
 
     console.log(to_sync_list.res);
 
-    // let times = [ 1, 5, 15, 60, 240, "day" ];
-    let times = [ 5, 15, 60, 240, "day" ];
+    let times = [ 1, 5, 15, 60, 240, "day" ];
 
     sync_data: for (let time of times) {
         for (let data of to_sync_list.res) {
