@@ -99,6 +99,7 @@ let mail = require("./libs/email");
 
     console.log(html)
 
+    /*
     let params = {
         "to"      : "yinlianhua@sina.cn",
         "subject" : "最新期货信息",
@@ -108,4 +109,5 @@ let mail = require("./libs/email");
     let send_res = await mail(params);
 
     console.log(send_res)
+    */
 })()
