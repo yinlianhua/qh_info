@@ -5,58 +5,10 @@
 
 'use strict';
 
-let mail = require("./libs/email");
+let _      = require("underscore");
+let moment = require("moment");
 
-(async function() {
-    let codes = [
-        "AU2604",
-        "AU2606",
-        "AG2604",
-        "AG2606",
-        "AO2605",
-        "AO2609",
-        "BU2605",
-        "BU2609",
-        "C2605",
-        "C2609",
-        "CF2605",
-        "CF2609",
-        "CJ2605",
-        "CJ2609",
-        "FG2605",
-        "FG2609",
-        "FU2605",
-        "FU2609",
-        "JM2605",
-        "JM2609",
-        "L2605",
-        "L2609",
-        "MA2605",
-        "MA2609",
-        "PS2605",
-        "PS2609",
-        "RB2605",
-        "RB2609",
-        "SA2605",
-        "SA2609",
-        "SF2605",
-        "SF2609",
-        "SH2605",
-        "SH2609",
-        "SI2605",
-        "SI2609",
-        "SM2605",
-        "SM2609",
-        "SP2605",
-        "SP2609",
-        "SR2605",
-        "SR2609",
-        "UR2605",
-        "UR2609",
-        "V2605",
-        "V2609"
-    ]
-
+async function fn_log_ma_info(codes) {
     let fn_get_qh_ma_info = require("./logic/sync/fn_get_qh_ma_info");
 
     let logs1   = [];
@@ -161,40 +113,69 @@ let mail = require("./libs/email");
     */
 
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
+    console.log(`|                                         ${moment().format("YYYY-MM-DD HH:mm:ss")}                                          |`);
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
     console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |       备注    |`);
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
     for (let log of [].concat(logs2_1, logs2_2, logs3_1, logs3_2)) {
         console.log(log);
     }
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
+}
 
 
-// 多转空
-// 🍀🍒🍒🍒
-// 🍀🍀🍒🍒
-// 空转多
-// 🍒🍀🍀🍀
-// 🍒🍒🍀🍀
-/*
-info += `   ${data.latest >= data.avg_05_120 ? "🍒   |" : "🍀   |"}`;
-info += `   ${data.latest >= data.avg_15_60  ? "🍒   |" : "🍀   |"}`;
-info += `   ${data.latest >= data.avg_60_30  ? "🍒   |" : "🍀   |"}`;
-info += `   ${data.latest >= data.avg_240_15 ? "🍒   |" : "🍀   |"}`;
-info += `   ${data.latest >= data.avg_day_10 ? "🍒   |" : "🍀   |"}`;
-*/
+(async function() {
+    let codes = [
+        "AU2604",
+        "AU2606",
+        "AG2604",
+        "AG2606",
+        "AO2605",
+        "AO2609",
+        "BU2605",
+        "BU2609",
+        "C2605",
+        "C2609",
+        "CF2605",
+        "CF2609",
+        "CJ2605",
+        "CJ2609",
+        "FG2605",
+        "FG2609",
+        "FU2605",
+        "FU2609",
+        "JM2605",
+        "JM2609",
+        "L2605",
+        "L2609",
+        "MA2605",
+        "MA2609",
+        "PS2605",
+        "PS2609",
+        "RB2605",
+        "RB2609",
+        "SA2605",
+        "SA2609",
+        "SF2605",
+        "SF2609",
+        "SH2605",
+        "SH2609",
+        "SI2605",
+        "SI2609",
+        "SM2605",
+        "SM2609",
+        "SP2605",
+        "SP2609",
+        "SR2605",
+        "SR2609",
+        "UR2605",
+        "UR2609",
+        "V2605",
+        "V2609"
+    ]
 
-// info += ` ${data.latest >= data.avg_01_120 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_01_240 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_05_120 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_05_240 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_15_60  ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_15_120 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_60_30  ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_60_60  ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_240_15 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_240_30 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_day_10 ? "🍒  |" : "🍀  |"}`;
-// info += ` ${data.latest >= data.avg_day_20 ? "🍒  |" : "🍀  |"}`;
+    await fn_log_ma_info(codes)
 
+    setInterval(async function() { await fn_log_ma_info(codes) }, 60 * 1000);
 })()
 
