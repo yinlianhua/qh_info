@@ -59,8 +59,11 @@ let mail = require("./libs/email");
 
     let fn_get_qh_ma_info = require("./logic/sync/fn_get_qh_ma_info");
 
-    let logs1 = [];
-    let logs2 = [];
+    let logs1   = [];
+    let logs2_1 = [];
+    let logs2_2 = [];
+    let logs3_1 = [];
+    let logs3_2 = [];
 
     // ▲ 🔺 ▼ 🔻  🍀 🍒
     for (let code of codes) {
@@ -72,6 +75,7 @@ let mail = require("./libs/email");
         data.m_60_30  = data.latest >= data.avg_60_30  ? "🍒" : "🍀";
         data.m_240_15 = data.latest >= data.avg_240_15 ? "🍒" : "🍀";
         data.m_day_10 = data.latest >= data.avg_day_10 ? "🍒" : "🍀";
+        data.m_mark   = "";
 
         let info = `| ${String(data.code).padStart(6)} | ${String(data.name).padStart(8)} | ${String(data.latest).padStart(8)} |`;
         info += `   ${data.m_01_240}   |`;
@@ -82,53 +86,71 @@ let mail = require("./libs/email");
         info += `   ${data.m_day_10}   |`;
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍀🍒🍒🍒") {
-            info += " 关注多转空 |";
+            data.m_mark = "  🔻  多 -> 空 |";
             data.signal = 1;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍀🍒🍒") {
-            info += " 关注多转空 |";
+            data.m_mark = "  🔻  多 -> 空 |";
             data.signal = 1;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍀🍀🍒🍒") {
-            info += " 重点多转空 |";
-            data.signal = 1;
+            data.m_mark = " 🔻🔻 多 -> 空 |";
+            data.signal = 2;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍀🍀🍒") {
-            info += " 重点多转空 |";
-            data.signal = 1;
+            data.m_mark = " 🔻🔻 多 -> 空 |";
+            data.signal = 2;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍒🍀🍀🍀") {
-            info += " 关注空转多 |";
-            data.signal = 1;
+            data.m_mark = "  🔺  空 -> 多 |";
+            data.signal = 3;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍒🍀🍀") {
-            info += " 关注空转多 |";
-            data.signal = 1;
+            data.m_mark = "  🔺  空 -> 多 |";
+            data.signal = 3;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍒🍒🍀🍀") {
-            info += " 重点空转多 |";
-            data.signal = 1;
+            data.m_mark = " 🔺🔺 空 -> 多 |";
+            data.signal = 4;
         }
 
         if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍒🍒🍀") {
-            info += " 重点空转多 |";
-            data.signal = 1;
+            data.m_mark = " 🔺🔺 空 -> 多 |";
+            data.signal = 4;
         }
 
+        info += data.m_mark;
+
         if (data.signal == 1) {
-            logs2.push(info);
+            logs2_1.push(info);
+            continue;
+        }
+
+        if (data.signal == 2) {
+            logs2_2.push(info);
+            continue;
+        }
+
+        if (data.signal == 3) {
+            logs3_1.push(info);
+            continue;
+        }
+
+        if (data.signal == 4) {
+            logs3_2.push(info);
             continue;
         }
 
         logs1.push(info)
     }
 
+    /*
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
     console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |`);
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
@@ -136,15 +158,15 @@ let mail = require("./libs/email");
         console.log(log);
     }
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
+    */
 
-    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+------------+`);
-    console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |     备注   |`);
-    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+------------+`);
-    for (let log of logs2) {
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
+    console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |       备注    |`);
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
+    for (let log of [].concat(logs2_1, logs2_2, logs3_1, logs3_2)) {
         console.log(log);
     }
-    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+------------+`);
-
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+---------------+`);
 
 
 // 多转空
