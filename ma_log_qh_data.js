@@ -59,37 +59,120 @@ let mail = require("./libs/email");
 
     let fn_get_qh_ma_info = require("./logic/sync/fn_get_qh_ma_info");
 
-    let logs = [];
-    // console.log(`|  Code  |    Name    |  Latest  | 01_120 | 01_240 | 05_120 | 05_240 | 15_60 | 15_120 | 60_30 | 60_60 | 240_15 | 240_30 | day_10 | day_20 |`);
-    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
-    console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |`);
-    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
+    let logs1 = [];
+    let logs2 = [];
 
     // ▲ 🔺 ▼ 🔻  🍀 🍒
     for (let code of codes) {
         let data = await fn_get_qh_ma_info(code);
+
+        data.m_01_240 = data.latest >= data.avg_01_240 ? "🍒" : "🍀";
+        data.m_05_120 = data.latest >= data.avg_05_120 ? "🍒" : "🍀";
+        data.m_15_60  = data.latest >= data.avg_15_60  ? "🍒" : "🍀";
+        data.m_60_30  = data.latest >= data.avg_60_30  ? "🍒" : "🍀";
+        data.m_240_15 = data.latest >= data.avg_240_15 ? "🍒" : "🍀";
+        data.m_day_10 = data.latest >= data.avg_day_10 ? "🍒" : "🍀";
+
         let info = `| ${String(data.code).padStart(6)} | ${String(data.name).padStart(8)} | ${String(data.latest).padStart(8)} |`;
-        info += `   ${data.latest >= data.avg_01_240 ? "🍒   |" : "🍀   |"}`;
-        info += `   ${data.latest >= data.avg_05_120 ? "🍒   |" : "🍀   |"}`;
-        info += `   ${data.latest >= data.avg_15_60  ? "🍒   |" : "🍀   |"}`;
-        info += `   ${data.latest >= data.avg_60_30  ? "🍒   |" : "🍀   |"}`;
-        info += `   ${data.latest >= data.avg_240_15 ? "🍒   |" : "🍀   |"}`;
-        info += `   ${data.latest >= data.avg_day_10 ? "🍒   |" : "🍀   |"}`;
+        info += `   ${data.m_01_240}   |`;
+        info += `   ${data.m_05_120}   |`;
+        info += `   ${data.m_15_60}   |`;
+        info += `   ${data.m_60_30}   |`;
+        info += `   ${data.m_240_15}   |`;
+        info += `   ${data.m_day_10}   |`;
 
-        // info += ` ${data.latest >= data.avg_01_120 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_01_240 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_05_120 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_05_240 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_15_60  ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_15_120 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_60_30  ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_60_60  ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_240_15 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_240_30 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_day_10 ? "🍒  |" : "🍀  |"}`;
-        // info += ` ${data.latest >= data.avg_day_20 ? "🍒  |" : "🍀  |"}`;
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍀🍒🍒🍒") {
+            info += " 关注多转空 |";
+            data.signal = 1;
+        }
 
-        console.log(info)
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍀🍒🍒") {
+            info += " 关注多转空 |";
+            data.signal = 1;
+        }
+
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍀🍀🍒🍒") {
+            info += " 重点多转空 |";
+            data.signal = 1;
+        }
+
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍀🍀🍒") {
+            info += " 重点多转空 |";
+            data.signal = 1;
+        }
+
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍒🍀🍀🍀") {
+            info += " 关注空转多 |";
+            data.signal = 1;
+        }
+
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍒🍀🍀") {
+            info += " 关注空转多 |";
+            data.signal = 1;
+        }
+
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}${data.m_60_30}` == "🍒🍒🍀🍀") {
+            info += " 重点空转多 |";
+            data.signal = 1;
+        }
+
+        if (`${data.m_01_240}${data.m_05_120}${data.m_15_60}` == "🍒🍒🍀") {
+            info += " 重点空转多 |";
+            data.signal = 1;
+        }
+
+        if (data.signal == 1) {
+            logs2.push(info);
+            continue;
+        }
+
+        logs1.push(info)
+    }
+
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
+    console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |`);
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
+    for (let log of logs1) {
+        console.log(log);
     }
     console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+`);
+
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+------------+`);
+    console.log(`|  Code  |    Name    |  Latest  | 01_240 | 05_120 |  15_60 |  60_30 | 240_15 | day_10 |     备注   |`);
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+------------+`);
+    for (let log of logs2) {
+        console.log(log);
+    }
+    console.log(`+--------+------------+----------+--------+--------+--------+--------+--------+--------+------------+`);
+
+
+
+// 多转空
+// 🍀🍒🍒🍒
+// 🍀🍀🍒🍒
+// 空转多
+// 🍒🍀🍀🍀
+// 🍒🍒🍀🍀
+/*
+info += `   ${data.latest >= data.avg_05_120 ? "🍒   |" : "🍀   |"}`;
+info += `   ${data.latest >= data.avg_15_60  ? "🍒   |" : "🍀   |"}`;
+info += `   ${data.latest >= data.avg_60_30  ? "🍒   |" : "🍀   |"}`;
+info += `   ${data.latest >= data.avg_240_15 ? "🍒   |" : "🍀   |"}`;
+info += `   ${data.latest >= data.avg_day_10 ? "🍒   |" : "🍀   |"}`;
+*/
+
+// info += ` ${data.latest >= data.avg_01_120 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_01_240 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_05_120 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_05_240 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_15_60  ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_15_120 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_60_30  ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_60_60  ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_240_15 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_240_30 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_day_10 ? "🍒  |" : "🍀  |"}`;
+// info += ` ${data.latest >= data.avg_day_20 ? "🍒  |" : "🍀  |"}`;
+
 })()
+
