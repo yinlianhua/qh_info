@@ -7,9 +7,13 @@
 
 let _         = require("underscore");
 let moment    = require("moment");
+let check     = require("./libs/time_check");
 let last_info = {};
 
 async function fn_log_ma_info(codes) {
+    let std_time = moment().startOf("minute").unix();
+    if (!check(std_time)) { return; }
+
     let fn_log_qh_ma_info = require("./logic/sync/fn_log_qh_ma_info");
 
     let info = await fn_log_qh_ma_info(codes, last_info);
