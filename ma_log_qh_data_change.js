@@ -16,23 +16,13 @@ async function fn_log_ma_info(codes) {
 
     last_info = info.last_info;
 
-    /*
-        "logs_common"
-        "logs_up_to_down1"
-        "logs_up_to_down2"
-        "logs_down_up_to1"
-        "logs_down_up_to2"
-    */
-
-    let logs = [].concat(info.logs_up_to_down1, info.logs_up_to_down2, info.logs_down_up_to1, info.logs_down_up_to2);
-
-    if (logs.length) {
+    if (info.logs_change.length) {
         console.log(`+---------------------------------------------------------------------------------------------------------------------------------+`);
         console.log(`|                                                  ${moment().format("YYYY-MM-DD HH:mm:ss")}                                                            |`);
         console.log(`+--------+------------+----------+----------------------------+--------------------------+-----------------+----------------------+`);
         console.log(`|  Code  |    Name    |  Latest  | 01_240   05_120    15_60   | 15_240    60_60   240_15 | 240_30  day_20  | 短期    方向    中期 |`);
         console.log(`+--------+------------+----------+----------------------------+--------------------------+-----------------+----------------------+`);
-        for (let log of logs) { console.log(log); }
+        for (let log of info.logs_change) { console.log(log); }
         console.log(`+--------+------------+----------+----------------------------+--------------------------+-----------------+----------------------+`);
     }
 }
