@@ -27,6 +27,7 @@ const fn_get_qh_main_info = async (code="") => {
         data_min_05_240,
         data_min_15_60,
         data_min_15_120,
+        data_min_15_240,
         data_min_60_30,
         data_min_60_60,
         data_min_240_15,
@@ -41,6 +42,7 @@ const fn_get_qh_main_info = async (code="") => {
         db.get(sql_map.sql_t_qh_data_5_min_240),
         db.get(sql_map.sql_t_qh_data_15_min_60),
         db.get(sql_map.sql_t_qh_data_15_min_120),
+        db.get(sql_map.sql_t_qh_data_15_min_240),
         db.get(sql_map.sql_t_qh_data_60_min_30),
         db.get(sql_map.sql_t_qh_data_60_min_60),
         db.get(sql_map.sql_t_qh_data_240_min_15),
@@ -56,6 +58,7 @@ const fn_get_qh_main_info = async (code="") => {
     data_min_05_240 = data_min_05_240.res[0];
     data_min_15_60  = data_min_15_60.res[0];
     data_min_15_120 = data_min_15_120.res[0];
+    data_min_15_240 = data_min_15_240.res[0];
     data_min_60_30  = data_min_60_30.res[0];
     data_min_60_60  = data_min_60_60.res[0];
     data_min_240_15 = data_min_240_15.res[0];
@@ -75,6 +78,7 @@ const fn_get_qh_main_info = async (code="") => {
         "avg_05_240" : +data_min_05_240.avg.toFixed(2),
         "avg_15_60"  : +data_min_15_60.avg.toFixed(2),
         "avg_15_120" : +data_min_15_120.avg.toFixed(2),
+        "avg_15_240" : +data_min_15_240.avg.toFixed(2),
         "avg_60_30"  : +data_min_60_30.avg.toFixed(2),
         "avg_60_60"  : +data_min_60_60.avg.toFixed(2),
         "avg_240_15" : +data_min_240_15.avg.toFixed(2),
