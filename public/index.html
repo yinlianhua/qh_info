@@ -75,6 +75,10 @@ tr:hover{background:#1b2028}
 .state.be{background:#7f1d1d;color:#fca5a5}
 .state.sbe{background:#9f1239;color:#fda4af}
 
+/* MA direction */
+.ma-bull{color:#3fb950;font-weight:600;letter-spacing:1px}
+.ma-bear{color:#f85149;font-weight:600;letter-spacing:1px}
+
 /* Refresh indicator */
 .refresh{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;animation:pulse 2s infinite}
 .refresh.ok{background:var(--green)}.refresh.err{background:var(--red)}
@@ -245,6 +249,7 @@ function renderGrouped(container) {
           <th style="width:85px">涨跌</th>
           <th style="width:80px">波动%</th>
           <th style="width:70px">强度</th>
+          <th style="width:200px">均线信号</th>
           <th style="width:60px">回撤%</th>
           <th style="width:65px">持仓量</th>
           <th style="width:65px">成交量</th>
@@ -304,6 +309,29 @@ function renderFlat(container, sortBy) {
 
   html += `</table></div></div>`;
   container.innerHTML = html;
+}
+
+function buildMAHtml(name) {
+  let ma = (currentData.ma || {})[name];
+  if (!ma) return '<span style="color:var(--text2);font-size:10px">加载中...</span>';
+
+  let shortClass = ma.short_term.includes("🍀") ? "ma-bear" : "ma-bull";
+  let midClass   = ma.mid_term.includes("🍀") ? "ma-bear" : "ma-bull";
+  let longClass  = ma.long_term.includes("🍀") ? "ma-bear" : "ma-bull";
+
+  let signalHtml = "";
+  if (ma.signal > 0) {
+    signalHtml = `<span style="font-size:10px;margin-left:4px">${ma.signalText}</span>`;
+  }
+
+  return `<span style="font-size:11px">
+    <span class="${shortClass}" title="短线">${ma.short_term}</span>
+    <span style="color:var(--text2)">|</span>
+    <span class="${midClass}" title="中线">${ma.mid_term}</span>
+    <span style="color:var(--text2)">|</span>
+    <span class="${longClass}" title="长线">${ma.long_term}</span>
+    ${signalHtml}
+  </span>`;
 }
 
 function renderRow(item, plan) {
@@ -372,6 +400,7 @@ function renderRow(item, plan) {
     <td style="color:${chgColor}">${chgSign}${chgPct}%</td>
     <td>${volPct}%</td>
     <td><span class="stars">${starsHtml}</span></td>
+    <td>${buildMAHtml(name)}</td>
     <td>${pullback}%</td>
     <td>${formatNum(hold)}</td>
     <td>${formatNum(vol)}</td>
