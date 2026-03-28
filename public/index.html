@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>期货实时监控</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--text2:#8b949e;
+  --green:#3fb950;--red:#f85149;--yellow:#d29922;--blue:#58a6ff;--purple:#bc8cff;
+  --bull:#3fb950;--bear:#f85149;
+}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono',Monaco,Consolas,'Courier New',monospace;font-size:13px;line-height:1.5;min-height:100vh}
+
+/* Header */
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header h1{font-size:16px;color:var(--text);font-weight:600}
+.header .meta{display:flex;gap:20px;align-items:center;font-size:12px;color:var(--text2)}
+.header .meta .time{color:var(--blue)}
+.header .meta .pnl{font-size:14px;font-weight:700}
+.pnl-pos{color:var(--green)}.pnl-neg{color:var(--red)}
+
+/* Controls */
+.controls{background:var(--card);border-bottom:1px solid var(--border);padding:8px 20px;display:flex;gap:12px;align-items:center}
+.controls label{color:var(--text2);font-size:11px}
+.controls select,.controls button{
+  background:#21262d;color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:4px 10px;font-size:12px;font-family:inherit;cursor:pointer
+}
+.controls button:hover{background:#30363d}
+
+/* PnL Summary */
+.pnl-bar{background:var(--card);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;gap:16px;flex-wrap:wrap}
+.pos-chip{display:inline-flex;align-items:center;gap:4px;background:#21262d;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px}
+.pos-chip .nm{color:var(--text2)}.pos-chip .ty{font-weight:700}
+.pos-chip .ty.long{color:var(--green)}.pos-chip .ty.short{color:var(--red)}
+.pos-chip .vl{font-weight:600}.pos-chip .vl.pos{color:var(--green)}.pos-chip .vl.neg{color:var(--red)}
+
+/* Groups */
+.group{margin:12px 16px}
+.group-title{
+  font-size:13px;font-weight:700;padding:6px 14px;border-radius:8px 8px 0 0;
+  display:flex;align-items:center;gap:8px
+}
+.group-title .cnt{font-weight:400;font-size:11px;color:var(--text2);background:#21262d;padding:1px 8px;border-radius:10px}
+.g-strong-bull .group-title{background:linear-gradient(135deg,#1a3a2a,#0d2818);color:#4ade80;border:1px solid #166534}
+.g-bull .group-title{background:linear-gradient(135deg,#1a2e1a,#0d1f0d);color:#86efac;border:1px solid #14532d}
+.g-shock .group-title{background:linear-gradient(135deg,#2e2a1a,#1f1f0d);color:#fde047;border:1px solid #422006}
+.g-bear .group-title{background:linear-gradient(135deg,#3a1a1a,#28100d);color:#fca5a5;border:1px solid #7f1d1d}
+.g-strong-bear .group-title{background:linear-gradient(135deg,#3a1a2a,#280d18);color:#f9a8d4;border:1px solid #9f1239}
+
+/* Table */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px}
+table{width:100%;min-width:1100px;border-collapse:collapse;table-layout:fixed}
+th{background:#21262d;color:var(--text2);font-weight:500;font-size:11px;text-align:left;padding:6px 10px;position:sticky;top:0;white-space:nowrap}
+td{padding:5px 10px;white-space:nowrap;border-bottom:1px solid #1b2028}
+tr:hover{background:#1b2028}
+
+/* Price bar */
+.price-bar{width:100%;height:16px;background:#21262d;border-radius:3px;position:relative;overflow:hidden}
+.price-bar .fill-bull{position:absolute;top:0;height:100%;background:linear-gradient(90deg,#166534,#3fb950);border-radius:3px;transition:width 0.5s}
+.price-bar .fill-bear{position:absolute;top:0;height:100%;background:linear-gradient(90deg,#f85149,#7f1d1d);border-radius:3px;transition:width 0.5s}
+.price-bar .mark{position:absolute;top:0;height:100%;width:2px;background:#fff;border-radius:1px}
+
+/* Strength stars */
+.stars{font-size:12px;letter-spacing:1px}
+.star-on{color:var(--yellow)}.star-off{color:#30363d}
+
+/* State badge */
+.state{display:inline-block;padding:1px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.state.sb{background:#166534;color:#4ade80}
+.state.b{background:#14532d;color:#86efac}
+.state.s{background:#713f12;color:#fde047}
+.state.be{background:#7f1d1d;color:#fca5a5}
+.state.sbe{background:#9f1239;color:#fda4af}
+
+/* Refresh indicator */
+.refresh{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;animation:pulse 2s infinite}
+.refresh.ok{background:var(--green)}.refresh.err{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* K-line chart area */
+.chart-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center}
+.chart-modal.show{display:flex}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:12px;width:90%;max-width:900px;max-height:85vh;overflow:hidden}
+.chart-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.chart-header h3{font-size:14px}
+.chart-header button{background:#21262d;color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 12px;cursor:pointer;font-family:inherit}
+.chart-body{padding:12px 16px}
+canvas#kline{width:100%;height:400px}
+
+/* Plan tags */
+.plan-tag{font-size:10px;color:var(--text2);margin-left:4px}
+.plan-tag .up{color:var(--red)}.plan-tag .dn{color:var(--green)}
+
+/* Responsive */
+@media(max-width:768px){
+  .header{flex-direction:column;gap:8px}
+  .pnl-bar{padding:8px}
+  .group{margin:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 期货实时监控</h1>
+  <div class="meta">
+    <span class="refresh ok" id="refreshDot"></span>
+    <span>刷新: <span id="intervalLabel">5s</span></span>
+    <span class="time" id="clock">--:--:--</span>
+    <span class="pnl" id="totalPnL">盈亏: --</span>
+  </div>
+</div>
+
+<div class="controls">
+  <label>刷新间隔</label>
+  <select id="refreshRate" onchange="changeRefresh()">
+    <option value="3000">3s</option>
+    <option value="5000" selected>5s</option>
+    <option value="10000">10s</option>
+    <option value="30000">30s</option>
+  </select>
+  <label>排序</label>
+  <select id="sortBy" onchange="render()">
+    <option value="default">按强度分组</option>
+    <option value="pnl">按盈亏</option>
+    <option value="change">按涨跌幅</option>
+  </select>
+</div>
+
+<div class="pnl-bar" id="posBar"></div>
+
+<div id="mainContent"></div>
+
+<!-- K线弹窗 -->
+<div class="chart-modal" id="chartModal">
+  <div class="chart-box">
+    <div class="chart-header">
+      <h3 id="chartTitle">K线图</h3>
+      <div>
+        <select id="chartPeriod" onchange="loadKline()">
+          <option value="5_min">5分钟</option>
+          <option value="15_min">15分钟</option>
+          <option value="60_min">60分钟</option>
+          <option value="240_min">4小时</option>
+          <option value="day">日线</option>
+        </select>
+        <button onclick="closeChart()">关闭</button>
+      </div>
+    </div>
+    <div class="chart-body">
+      <canvas id="kline" height="400"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+const STATE_ORDER = {"强多":"sb","偏多":"b","震荡":"s","偏空":"be","强空":"sbe"};
+const GROUP_CLASS = {"强多":"g-strong-bull","偏多":"g-bull","震荡":"g-shock","偏空":"g-bear","强空":"g-strong-bear"};
+
+let refreshMs = 5000;
+let refreshTimer = null;
+let currentData = null;
+let currentKlineCode = null;
+
+function changeRefresh() {
+  refreshMs = parseInt(document.getElementById("refreshRate").value);
+  document.getElementById("intervalLabel").textContent = (refreshMs/1000) + "s";
+  startRefresh();
+}
+
+function startRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  fetchData();
+  refreshTimer = setInterval(fetchData, refreshMs);
+}
+
+async function fetchData() {
+  const dot = document.getElementById("refreshDot");
+  try {
+    const res = await fetch("/api/quote");
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    currentData = json;
+    render();
+    dot.className = "refresh ok";
+  } catch(e) {
+    console.error(e);
+    dot.className = "refresh err";
+  }
+}
+
+function render() {
+  if (!currentData) return;
+
+  document.getElementById("clock").textContent = currentData.time;
+
+  // PnL
+  const pnl = currentData.position;
+  const pnlEl = document.getElementById("totalPnL");
+  const pnlVal = Math.round(pnl.totalPnL);
+  pnlEl.textContent = `盈亏: ${pnlVal >= 0 ? '+' : ''}${pnlVal.toLocaleString()}`;
+  pnlEl.className = "pnl " + (pnlVal >= 0 ? "pnl-pos" : "pnl-neg");
+
+  // Position chips
+  const posBar = document.getElementById("posBar");
+  posBar.innerHTML = pnl.positions.map(p => {
+    const cls = p.pnl >= 0 ? "pos" : "neg";
+    return `<div class="pos-chip">
+      <span class="nm">${p.name}</span>
+      <span class="ty ${p.type==='多'?'long':'short'}">${p.type}${p.count}手</span>
+      <span class="vl ${cls}">${p.pnl>=0?'+':''}${Math.round(p.pnl).toLocaleString()}</span>
+    </div>`;
+  }).join("");
+
+  const main = document.getElementById("mainContent");
+  const sortBy = document.getElementById("sortBy").value;
+
+  if (sortBy === "default") {
+    renderGrouped(main);
+  } else {
+    renderFlat(main, sortBy);
+  }
+}
+
+function renderGrouped(container) {
+  const groups = currentData.groups;
+  const plan = currentData.plan;
+  let html = "";
+
+  for (let state of ["强多","偏多","震荡","偏空","强空"]) {
+    const items = groups[state];
+    if (!items || items.length === 0) continue;
+
+    html += `<div class="group ${GROUP_CLASS[state]}">
+      <div class="group-title">${state} <span class="cnt">${items.length}</span></div>
+      <div class="table-wrap"><table>
+        <tr>
+          <th style="width:85px">品种</th>
+          <th style="width:65px">状态</th>
+          <th style="width:60px">最新</th>
+          <th style="width:125px">价格区间</th>
+          <th style="width:85px">涨跌</th>
+          <th style="width:80px">波动%</th>
+          <th style="width:70px">强度</th>
+          <th style="width:60px">回撤%</th>
+          <th style="width:65px">持仓量</th>
+          <th style="width:65px">成交量</th>
+          <th style="width:80px">计划</th>
+          <th style="width:180px">持仓</th>
+        </tr>`;
+
+    for (let item of items) {
+      html += renderRow(item, plan);
+    }
+
+    html += `</table></div></div>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function renderFlat(container, sortBy) {
+  let allItems = currentData.raw || [];
+  const plan = currentData.plan;
+
+  if (sortBy === "pnl") {
+    let posMap = {};
+    for (let p of currentData.position.positions) {
+      posMap[p.name] = p;
+    }
+    allItems.sort((a, b) => {
+      let pa = posMap[a["子名称"]] ? posMap[a["子名称"]].pnl : 0;
+      let pb = posMap[b["子名称"]] ? posMap[b["子名称"]].pnl : 0;
+      return pb - pa;
+    });
+  } else if (sortBy === "change") {
+    allItems.sort((a, b) => parseFloat(b["波动比"]) - parseFloat(a["波动比"]));
+  }
+
+  let html = `<div class="group g-shock">
+    <div class="group-title">全部品种 <span class="cnt">${allItems.length}</span></div>
+    <div class="table-wrap"><table>
+      <tr>
+        <th style="width:85px">品种</th>
+        <th style="width:65px">状态</th>
+        <th style="width:60px">最新</th>
+        <th style="width:125px">价格区间</th>
+        <th style="width:85px">涨跌</th>
+        <th style="width:80px">波动%</th>
+        <th style="width:70px">强度</th>
+        <th style="width:60px">回撤%</th>
+        <th style="width:65px">持仓量</th>
+        <th style="width:65px">成交量</th>
+        <th style="width:80px">计划</th>
+        <th style="width:180px">持仓</th>
+      </tr>`;
+
+  for (let item of allItems) {
+    html += renderRow(item, plan);
+  }
+
+  html += `</table></div></div>`;
+  container.innerHTML = html;
+}
+
+function renderRow(item, plan) {
+  const name = item["子名称"];
+  const last = item["最新价"];
+  const open = item["开盘价"];
+  const high = item["最高价"];
+  const low = item["最低价"];
+  const prevSettle = item["昨结算"];
+  const chgPct = prevSettle ? ((last - prevSettle) / prevSettle * 100).toFixed(2) : "0.00";
+  const volPct = item["波动比"];
+  const pullback = item["回撤比"];
+  const hold = item["持仓量"];
+  const vol = item["成交量"];
+  const state = item["多空态"];
+  const strength = item["强度比"];
+
+  // Change color
+  const chgVal = parseFloat(chgPct);
+  const chgColor = chgVal > 0 ? "var(--green)" : chgVal < 0 ? "var(--red)" : "var(--text2)";
+  const chgSign = chgVal > 0 ? "+" : "";
+
+  // Price bar
+  const range = high - low || 1;
+  const posInBar = ((last - low) / range * 100).toFixed(1);
+  const barBg = item["多空态"].includes("多") ? "fill-bull" : "fill-bear";
+
+  // Strength stars
+  let starsHtml = "";
+  for (let ch of strength) {
+    if (ch === "★") starsHtml += `<span class="star-on">★</span>`;
+    else starsHtml += `<span class="star-off">☆</span>`;
+  }
+
+  // Plan info
+  let planHtml = "";
+  if (plan[name]) {
+    const p = plan[name];
+    if (p["上限"]) planHtml += `<span class="plan-tag up">↑${p["上限"]}</span>`;
+    if (p["下限"]) planHtml += `<span class="plan-tag dn">↓${p["下限"]}</span>`;
+  }
+
+  // Position info
+  let posHtml = "";
+  for (let p of (currentData.position.positions || [])) {
+    if (p.name === name) {
+      const cls = p.pnl >= 0 ? "pos" : "neg";
+      posHtml = `<span class="${p.type==='多'?'pnl-pos':'pnl-neg'}">${p.type}${p.count} ${p.cost}</span> <span class="${cls}">${p.pnl>=0?'+':''}${Math.round(p.pnl)}</span>`;
+    }
+  }
+
+  return `<tr onclick="openKline('${name}')">
+    <td>${name}</td>
+    <td><span class="state ${STATE_ORDER[state]||'s'}">${state}</span></td>
+    <td style="font-weight:700;color:${chgColor}">${last}</td>
+    <td>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;color:var(--text2);width:45px">${low}</span>
+        <div class="price-bar">
+          <div class="${barBg}" style="width:${posInBar}%"></div>
+          <div class="mark" style="left:${posInBar}%"></div>
+        </div>
+        <span style="font-size:11px;color:var(--text2);width:45px;text-align:right">${high}</span>
+      </div>
+    </td>
+    <td style="color:${chgColor}">${chgSign}${chgPct}%</td>
+    <td>${volPct}%</td>
+    <td><span class="stars">${starsHtml}</span></td>
+    <td>${pullback}%</td>
+    <td>${formatNum(hold)}</td>
+    <td>${formatNum(vol)}</td>
+    <td>${planHtml}</td>
+    <td style="font-size:11px;text-align:left;vertical-align:middle">${posHtml}</td>
+  </tr>`;
+}
+
+function formatNum(n) {
+  if (n >= 10000) return (n/10000).toFixed(1) + "w";
+  if (n >= 1000) return (n/1000).toFixed(1) + "k";
+  return n;
+}
+
+// K线图
+function openKline(name) {
+  currentKlineCode = name;
+  const parts = name.split("_");
+  const qhMap = {};
+  // 从monit_map反查code
+  fetch("/api/kline?code=" + name + "&period=" + document.getElementById("chartPeriod").value + "&limit=200")
+    .then(r => r.json())
+    .then(json => {
+      document.getElementById("chartTitle").textContent = name + " K线图";
+      document.getElementById("chartModal").classList.add("show");
+      drawKline(json.data || []);
+    });
+}
+
+function closeChart() {
+  document.getElementById("chartModal").classList.remove("show");
+}
+
+function loadKline() {
+  if (!currentKlineCode) return;
+  const period = document.getElementById("chartPeriod").value;
+  fetch("/api/kline?code=" + currentKlineCode + "&period=" + period + "&limit=200")
+    .then(r => r.json())
+    .then(json => drawKline(json.data || []));
+}
+
+function drawKline(data) {
+  const canvas = document.getElementById("kline");
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width = canvas.offsetWidth * dpr;
+  canvas.height = 400 * dpr;
+  ctx.scale(dpr, dpr);
+
+  const W = canvas.offsetWidth;
+  const H = 400;
+  const PAD = {top:20,right:60,bottom:30,left:10};
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+  const volH = cH * 0.2;
+  const priceH = cH - volH - 10;
+
+  ctx.clearRect(0, 0, W, H);
+
+  if (!data.length) return;
+
+  let maxP = -Infinity, minP = Infinity, maxV = 0;
+  for (let d of data) {
+    maxP = Math.max(maxP, d.high);
+    minP = Math.min(minP, d.low);
+    maxV = Math.max(maxV, d.close);
+  }
+  const pRange = maxP - minP || 1;
+  const barW = Math.max(1, cW / data.length - 1);
+
+  // Grid
+  ctx.strokeStyle = "#1b2028";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 5; i++) {
+    let y = PAD.top + (priceH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(W - PAD.right, y); ctx.stroke();
+    let pv = maxP - (pRange / 4) * i;
+    ctx.fillStyle = "#8b949e";
+    ctx.font = "10px monospace";
+    ctx.textAlign = "left";
+    ctx.fillText(pv.toFixed(0), W - PAD.right + 4, y + 3);
+  }
+
+  // Candles
+  for (let i = 0; i < data.length; i++) {
+    const d = data[i];
+    const x = PAD.left + (i / data.length) * cW + barW / 2;
+    const isUp = d.close >= d.open;
+
+    const yOpen  = PAD.top + ((maxP - d.open) / pRange) * priceH;
+    const yClose = PAD.top + ((maxP - d.close) / pRange) * priceH;
+    const yHigh  = PAD.top + ((maxP - d.high) / pRange) * priceH;
+    const yLow   = PAD.top + ((maxP - d.low) / pRange) * priceH;
+
+    // Wick
+    ctx.strokeStyle = isUp ? "#3fb950" : "#f85149";
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, yHigh); ctx.lineTo(x, yLow); ctx.stroke();
+
+    // Body
+    ctx.fillStyle = isUp ? "#3fb950" : "#f85149";
+    const bodyTop = Math.min(yOpen, yClose);
+    const bodyH = Math.max(1, Math.abs(yClose - yOpen));
+    ctx.fillRect(x - barW/2, bodyTop, barW, bodyH);
+  }
+
+  // MA5
+  if (data.length >= 5) {
+    ctx.beginPath();
+    ctx.strokeStyle = "#58a6ff";
+    ctx.lineWidth = 1.5;
+    for (let i = 4; i < data.length; i++) {
+      let sum = 0;
+      for (let j = i - 4; j <= i; j++) sum += data[j].close;
+      let ma = sum / 5;
+      let x = PAD.left + (i / data.length) * cW + barW / 2;
+      let y = PAD.top + ((maxP - ma) / pRange) * priceH;
+      if (i === 4) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // MA20
+  if (data.length >= 20) {
+    ctx.beginPath();
+    ctx.strokeStyle = "#d29922";
+    ctx.lineWidth = 1.5;
+    for (let i = 19; i < data.length; i++) {
+      let sum = 0;
+      for (let j = i - 19; j <= i; j++) sum += data[j].close;
+      let ma = sum / 20;
+      let x = PAD.left + (i / data.length) * cW + barW / 2;
+      let y = PAD.top + ((maxP - ma) / pRange) * priceH;
+      if (i === 19) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+}
+
+// Close modal on backdrop click
+document.getElementById("chartModal").addEventListener("click", function(e) {
+  if (e.target === this) closeChart();
+});
+
+// Clock update
+setInterval(() => {
+  const now = new Date();
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("zh-CN", {hour12:false});
+}, 1000);
+
+// Init
+startRefresh();
+</script>
+</body>
+</html>
